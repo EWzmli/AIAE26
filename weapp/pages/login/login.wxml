@@ -1,0 +1,65 @@
+<!-- 登录页 -->
+<view class="container">
+  <view class="header">
+    <view class="back-btn" bindtap="goBack">←</view>
+    <text class="page-title">登录</text>
+  </view>
+
+  <view class="login-section">
+    <view class="input-group">
+      <text class="label">交大邮箱</text>
+      <view class="email-input">
+        <input 
+          class="input" 
+          type="text" 
+          placeholder="请输入学号邮箱"
+          value="{{emailPrefix}}"
+          bindinput="onEmailInput"
+        />
+        <text class="email-suffix">@sjtu.edu.cn</text>
+      </view>
+    </view>
+
+    <view class="input-group" wx:if="{{showCodeInput}}">
+      <text class="label">验证码</text>
+      <view class="code-input">
+        <input 
+          class="input" 
+          type="number" 
+          placeholder="请输入6位验证码"
+          maxlength="6"
+          value="{{verifyCode}}"
+          bindinput="onCodeInput"
+        />
+        <button 
+          class="btn-send {{countdown > 0 ? 'disabled' : ''}}" 
+          bindtap="sendCode"
+          disabled="{{countdown > 0}}"
+        >
+          {{countdown > 0 ? countdown + 's' : '获取验证码'}}
+        </button>
+      </view>
+    </view>
+
+    <button 
+      class="btn btn-primary {{!canSubmit ? 'btn-disabled' : ''}}" 
+      bindtap="submit"
+      disabled="{{!canSubmit}}"
+    >
+      {{showCodeInput ? '登录' : '获取验证码'}}
+    </button>
+
+    <view class="divider">
+      <text>或</text>
+    </view>
+
+    <button class="btn btn-outline" bindtap="jAccountLogin">
+      使用 jAccount 登录
+    </button>
+
+    <view class="tips">
+      <text>• 仅限上海交通大学校内用户使用</text>
+      <text>• 邮箱格式：学号@sjtu.edu.cn</text>
+    </view>
+  </view>
+</view>

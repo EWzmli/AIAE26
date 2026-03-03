@@ -1,0 +1,117 @@
+<!-- 社区页 -->
+<view class="container">
+  <!-- Tab切换 -->
+  <view class="tab-bar">
+    <view 
+      class="tab-item {{currentTab === 'hiring' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="hiring"
+    >
+      招聘广场
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'events' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="events"
+    >
+      活动行
+    </view>
+  </view>
+
+  <!-- 招聘广场 -->
+  <view wx:if="{{currentTab === 'hiring'}}">
+    <!-- 筛选栏 -->
+    <view class="filter-bar">
+      <picker bindchange="onRoleFilter" range="{{roleOptions}}">
+        <view class="filter-item">
+          {{roleFilter || '角色类型'}}
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+      <picker bindchange="onCommitmentFilter" range="{{commitmentOptions}}">
+        <view class="filter-item">
+          {{commitmentFilter || '投入时间'}}
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 帖子列表 -->
+    <view class="post-list">
+      <view 
+        wx:for="{{posts}}" 
+        wx:key="id"
+        class="post-card"
+        bindtap="goToPostDetail"
+        data-id="{{item.id}}"
+      >
+        <view class="post-header">
+          <image class="avatar avatar-sm" src="{{item.user.avatar}}" />
+          <view class="post-meta">
+            <text class="username">{{item.user.name}}</text>
+            <text class="time">{{item.timeAgo}}</text>
+          </view>
+          <view class="post-type {{item.type === 'find_partner' ? 'type-partner' : 'type-job'}}">
+            {{item.type === 'find_partner' ? '找合伙人' : '招岗位'}}
+          </view>
+        </view>
+
+        <view class="post-title">{{item.title}}</view>
+        <view class="post-content">{{item.content}}</view>
+
+        <view class="post-tags">
+          <text class="tag tag-skill">{{item.roleType}}</text>
+          <text class="tag">{{item.commitment}}</text>
+        </view>
+
+        <view class="post-footer">
+          <text class="project-name" wx:if="{{item.projectName}}">📁 {{item.projectName}}</text>
+          <text class="reward" wx:if="{{item.reward}}">💰 {{item.reward}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{posts.length === 0}}">
+      <text>暂无招聘帖，来发第一个吧！</text>
+    </view>
+
+    <!-- 发帖按钮 -->
+    <view class="fab" bindtap="goToCreatePost">
+      <text class="fab-icon">+</text>
+      <text>发布</text>
+    </view>
+  </view>
+
+  <!-- 活动行 -->
+  <view wx:if="{{currentTab === 'events'}}">
+    <view class="event-list">
+      <view 
+        wx:for="{{events}}" 
+        wx:key="id"
+        class="event-card"
+        bindtap="goToEventDetail"
+        data-id="{{item.id}}"
+      >
+        <image class="event-poster" src="{{item.poster}}" mode="aspectFill" />
+        <view class="event-info">
+          <view class="event-title">{{item.title}}</view>
+          <view class="event-meta">
+            <text class="event-time">📅 {{item.startTime}}</text>
+            <text class="event-location">📍 {{item.location}}</text>
+          </view>
+          <view class="event-organizer">主办方：{{item.organizer}}</view>
+          <view class="event-footer">
+            <text class="event-type">{{item.type}}</text>
+            <text class="participant-count">{{item.participantCount}}人已报名</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{events.length === 0}}">
+      <text>暂无活动，敬请期待！</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,66 @@
+/* 首页样式 */
+.logo-section {
+  text-align: center;
+  padding: 80rpx 0;
+}
+
+.logo {
+  font-size: 120rpx;
+  margin-bottom: 20rpx;
+}
+
+.title {
+  font-size: 64rpx;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 8rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  margin-top: 16rpx;
+}
+
+.features {
+  padding: 40rpx 60rpx;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  background: var(--card);
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.feature-icon {
+  font-size: 48rpx;
+  margin-right: 24rpx;
+}
+
+.feature-text {
+  font-size: 30rpx;
+  color: var(--text);
+}
+
+.action-section {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40rpx 60rpx;
+  padding-bottom: 80rpx;
+  background: linear-gradient(to top, var(--bg), transparent);
+}
+
+.hint {
+  text-align: center;
+  margin-top: 20rpx;
+}
+
+.hint text {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}

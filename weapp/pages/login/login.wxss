@@ -1,0 +1,117 @@
+/* 登录页样式 */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+}
+
+.back-btn {
+  font-size: 48rpx;
+  padding: 20rpx;
+  color: var(--text);
+}
+
+.page-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-left: 20rpx;
+}
+
+.login-section {
+  margin-top: 60rpx;
+}
+
+.input-group {
+  margin-bottom: 40rpx;
+}
+
+.label {
+  display: block;
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  margin-bottom: 16rpx;
+}
+
+.email-input {
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+  border-radius: 16rpx;
+  padding: 0 30rpx;
+}
+
+.email-input .input {
+  flex: 1;
+  background: transparent;
+  margin: 0;
+  padding-left: 0;
+}
+
+.email-suffix {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.code-input {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.code-input .input {
+  flex: 1;
+}
+
+.btn-send {
+  width: 200rpx;
+  height: 90rpx;
+  line-height: 90rpx;
+  background: var(--primary);
+  color: #fff;
+  font-size: 26rpx;
+  border-radius: 16rpx;
+  padding: 0;
+}
+
+.btn-send.disabled {
+  background: var(--border);
+  color: var(--text-secondary);
+}
+
+.divider {
+  text-align: center;
+  margin: 60rpx 0;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 200rpx;
+  height: 2rpx;
+  background: var(--border);
+}
+
+.divider::before { left: 0; }
+.divider::after { right: 0; }
+
+.divider text {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  padding: 0 20rpx;
+  background: var(--bg);
+}
+
+.tips {
+  margin-top: 60rpx;
+}
+
+.tips text {
+  display: block;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  margin-bottom: 10rpx;
+}

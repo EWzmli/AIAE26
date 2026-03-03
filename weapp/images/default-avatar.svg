@@ -1,0 +1,6 @@
+<!-- 默认头像占位 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <rect width="120" height="120" fill="#e0e0e0"/>
+  <circle cx="60" cy="50" r="25" fill="#999"/>
+  <ellipse cx="60" cy="110" rx="40" ry="35" fill="#999"/>
+</svg>

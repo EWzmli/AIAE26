@@ -1,0 +1,91 @@
+<!-- 个人中心 -->
+<view class="container">
+  <!-- 用户信息卡片 -->
+  <view class="card user-card">
+    <view class="user-main">
+      <image class="avatar avatar-lg" src="{{userInfo.avatar}}" mode="aspectFill" />
+      <view class="user-details">
+        <text class="user-name">{{userInfo.name}}</text>
+        <text class="user-meta">{{userInfo.grade}} · {{userInfo.major}}</text>
+        <view class="status-tag">{{userInfo.statusTag}}</view>
+      </view>
+    </view>
+    
+    <view class="user-stats">
+      <view class="stat-item">
+        <text class="stat-num">{{stats.links}}</text>
+        <text class="stat-label">已匹配</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-num">{{stats.posts}}</text>
+        <text class="stat-label">我的帖子</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-num">{{stats.events}}</text>
+        <text class="stat-label">参加活动</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的标签 -->
+  <view class="card">
+    <view class="section-header">
+      <text class="section-title">我的标签</text>
+      <text class="edit-btn" bindtap="goToEdit">编辑</text>
+    </view>
+    
+    <view class="tag-section" wx:if="{{userInfo.techTags.length > 0}}">
+      <text class="tag-label">技术技能</text>
+      <view class="tag-list">
+        <text class="tag tag-skill" wx:for="{{userInfo.techTags}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+    
+    <view class="tag-section" wx:if="{{userInfo.designTags.length > 0}}">
+      <text class="tag-label">设计/产品</text>
+      <view class="tag-list">
+        <text class="tag" wx:for="{{userInfo.designTags}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+    
+    <view class="tag-section" wx:if="{{userInfo.interestTags.length > 0}}">
+      <text class="tag-label">兴趣领域</text>
+      <view class="tag-list">
+        <text class="tag" wx:for="{{userInfo.interestTags}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 个人简介 -->
+  <view class="card" wx:if="{{userInfo.bio}}">
+    <view class="section-title">个人简介</view>
+    <text class="bio-text">{{userInfo.bio}}</text>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="card menu-card">
+    <view class="menu-item" bindtap="goToMyPosts">
+      <text class="menu-icon">📝</text>
+      <text class="menu-text">我的帖子</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goToMyEvents">
+      <text class="menu-icon">📅</text>
+      <text class="menu-text">我的活动</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goToMyLinks">
+      <text class="menu-icon">🤝</text>
+      <text class="menu-text">我的匹配</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goToBusinessCard">
+      <text class="menu-icon">🎫</text>
+      <text class="menu-text">生成名片</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <button class="btn btn-outline logout-btn" bindtap="logout">退出登录</button>
+</view>

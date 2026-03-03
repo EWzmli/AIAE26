@@ -1,0 +1,30 @@
+<!-- 启动页/入口页 -->
+<view class="container">
+  <view class="logo-section">
+    <view class="logo">🚀</view>
+    <view class="title">AIAE</view>
+    <view class="subtitle">上海交通大学创业者社交平台</view>
+  </view>
+
+  <view class="features">
+    <view class="feature-item">
+      <text class="feature-icon">🎯</text>
+      <text class="feature-text">精准匹配创业伙伴</text>
+    </view>
+    <view class="feature-item">
+      <text class="feature-icon">🛡️</text>
+      <text class="feature-text">校内实名认证</text>
+    </view>
+    <view class="feature-item">
+      <text class="feature-icon">🤝</text>
+      <text class="feature-text">资源撮合对接</text>
+    </view>
+  </view>
+
+  <view class="action-section">
+    <button class="btn btn-primary" bindtap="goToLogin">开始使用</button>
+    <view class="hint">
+      <text>仅限 @sjtu.edu.cn 邮箱用户</text>
+    </view>
+  </view>
+</view>

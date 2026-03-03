@@ -1,0 +1,92 @@
+<!-- 社交页 - 每日推荐 -->
+<view class="container">
+  <view class="header">
+    <text class="page-title">每日推荐</text>
+    <text class="subtitle">每天12:00更新，今日还剩 {{remaining}} 人</text>
+  </view>
+
+  <!-- 用户卡片列表 -->
+  <swiper 
+    class="card-swiper" 
+    previous-margin="60rpx" 
+    next-margin="60rpx"
+    bindchange="onCardChange"
+  >
+    <swiper-item wx:for="{{recommendations}}" wx:key="id">
+      <view class="user-card">
+        <image class="user-avatar" src="{{item.avatar}}" mode="aspectFill" />
+        
+        <view class="user-info">
+          <view class="user-header">
+            <text class="user-name">{{item.name}}</text>
+            <text class="user-grade">{{item.grade}}</text>
+          </view>
+          <text class="user-major">{{item.major}}</text>
+          
+          <view class="user-status">
+            <text class="status-tag">{{item.statusTag}}</text>
+            <text class="project-name" wx:if="{{item.projectName}}">{{item.projectName}}</text>
+          </view>
+
+          <view class="user-tags">
+            <view class="tag-section" wx:if="{{item.techTags.length > 0}}">
+              <text class="tag-label">技能</text>
+              <view class="tag-list">
+                <text class="tag tag-skill" wx:for="{{item.techTags}}" wx:key="*this">{{item}}</text>
+              </view>
+            </view>
+            
+            <view class="tag-section" wx:if="{{item.interestTags.length > 0}}">
+              <text class="tag-label">兴趣</text>
+              <view class="tag-list">
+                <text class="tag" wx:for="{{item.interestTags}}" wx:key="*this">{{item}}</text>
+              </view>
+            </view>
+          </view>
+
+          <view class="user-bio" wx:if="{{item.bio}}">
+            <text>"{{item.bio}}"</text>
+          </view>
+
+          <view class="wechat-hint">
+            <text>微信号: {{item.wechatMasked}}</text>
+            <text class="link-hint">匹配成功后可见完整号码</text>
+          </view>
+        </view>
+
+        <view class="card-actions">
+          <button class="action-btn skip" bindtap="onSkip" data-id="{{item.id}}">
+            <text>忽略</text>
+          </button>
+          <button class="action-btn like" bindtap="onLike" data-id="{{item.id}}">
+            <text>想认识</text>
+          </button>
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{recommendations.length === 0}}">
+    <text>今日推荐已看完，明天12:00更新～</text>
+  </view>
+
+  <!-- 申请弹窗 -->
+  <view class="modal" wx:if="{{showModal}}">
+    <view class="modal-mask" bindtap="closeModal"></view>
+    <view class="modal-content">
+      <view class="modal-title">发送申请</view>
+      <textarea 
+        class="modal-textarea"
+        placeholder="写一句话介绍自己或说明来意..."
+        value="{{requestMessage}}"
+        maxlength="50"
+        bindinput="onMessageInput"
+      />
+      <view class="modal-actions">
+        <button class="btn btn-outline" bindtap="closeModal">取消</button>
+        <button class="btn btn-primary" bindtap="sendRequest">发送</button>
+      </view>
+    </view>
+  </view>
+</view>

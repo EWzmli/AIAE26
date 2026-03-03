@@ -1,0 +1,155 @@
+<!-- 完善资料页 -->
+<view class="container">
+  <view class="header">
+    <text class="page-title">完善资料</text>
+    <text class="subtitle">让同学们更好地认识你</text>
+  </view>
+
+  <!-- 头像 -->
+  <view class="avatar-section">
+    <view class="avatar-wrapper" bindtap="chooseAvatar">
+      <image 
+        class="avatar avatar-lg" 
+        src="{{avatar || '/images/default-avatar.png'}}"
+        mode="aspectFill"
+      />
+      <view class="avatar-hint">点击上传头像</view>
+    </view>
+  </view>
+
+  <!-- 基础信息 -->
+  <view class="card">
+    <view class="form-item">
+      <text class="label">姓名</text>
+      <input 
+        class="input" 
+        placeholder="请输入真实姓名"
+        value="{{name}}"
+        bindinput="onNameInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label">年级</text>
+      <picker bindchange="onGradeChange" value="{{gradeIndex}}" range="{{grades}}">
+        <view class="picker {{grade ? '' : 'placeholder'}}">
+          {{grade || '请选择年级'}}
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">专业</text>
+      <input 
+        class="input" 
+        placeholder="请输入专业名称"
+        value="{{major}}"
+        bindinput="onMajorInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label">微信号</text>
+      <input 
+        class="input" 
+        placeholder="用于同学添加你"
+        value="{{wechatId}}"
+        bindinput="onWechatInput"
+      />
+      <text class="hint">仅匹配成功后可见完整微信号</text>
+    </view>
+  </view>
+
+  <!-- 标签选择 -->
+  <view class="card">
+    <view class="section-title">当前状态（选1个）</view>
+    <view class="tag-list">
+      <view 
+        wx:for="{{statusTags}}" 
+        wx:key="id"
+        class="tag {{selectedStatus === item.id ? 'tag-active' : ''}}"
+        bindtap="selectStatus"
+        data-id="{{item.id}}"
+      >
+        {{item.icon}} {{item.name}}
+      </view>
+    </view>
+
+    <view class="section-title" wx:if="{{selectedStatus === 'in_startup'}}">项目名称</view>
+    <input 
+      wx:if="{{selectedStatus === 'in_startup'}}"
+      class="input" 
+      placeholder="请输入你的创业项目名称"
+      value="{{projectName}}"
+      bindinput="onProjectNameInput"
+    />
+  </view>
+
+  <!-- 技能标签 -->
+  <view class="card">
+    <view class="section-title">技术技能</view>
+    <view class="tag-list">
+      <view 
+        wx:for="{{techTags}}" 
+        wx:key="*this"
+        class="tag {{selectedTechTags.includes(item) ? 'tag-active' : ''}}"
+        bindtap="toggleTechTag"
+        data-tag="{{item}}"
+      >
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">设计/产品技能</view>
+    <view class="tag-list">
+      <view 
+        wx:for="{{designTags}}" 
+        wx:key="*this"
+        class="tag {{selectedDesignTags.includes(item) ? 'tag-active' : ''}}"
+        bindtap="toggleDesignTag"
+        data-tag="{{item}}"
+      >
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 兴趣领域 -->
+  <view class="card">
+    <view class="section-title">感兴趣的领域</view>
+    <view class="tag-list">
+      <view 
+        wx:for="{{interestTags}}" 
+        wx:key="*this"
+        class="tag {{selectedInterests.includes(item) ? 'tag-active' : ''}}"
+        bindtap="toggleInterest"
+        data-tag="{{item}}"
+      >
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 个人简介 -->
+  <view class="card">
+    <view class="section-title">个人简介</view>
+    <textarea 
+      class="textarea" 
+      placeholder="介绍一下自己，比如：我想做AI+教育的创业项目，想找一位前端合伙人..."
+      value="{{bio}}"
+      maxlength="200"
+      bindinput="onBioInput"
+    />
+    <text class="char-count">{{bio.length}}/200</text>
+  </view>
+
+  <button 
+    class="btn btn-primary {{!canSubmit ? 'btn-disabled' : ''}}" 
+    bindtap="submit"
+    disabled="{{!canSubmit}}"
+  >
+    完成
+  </button>
+</view>
