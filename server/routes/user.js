@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { users } = require('../models/db');
+const { users, posts, events, matches } = require('../models/db');
 
 // 认证中间件
 const authMiddleware = (req, res, next) => {
@@ -26,10 +26,34 @@ router.get('/me', authMiddleware, (req, res) => {
     return res.status(404).json({ message: '用户不存在' });
   }
   
-  // 隐藏敏感信息
   const { wechatId, ...userInfo } = user;
   res.json({
     ...userInfo,
+    wechatMasked: user.wechatMasked || '***'
+  });
+});
+
+// 获取用户名片（公开信息）
+router.get('/card/:id', (req, res) => {
+  const user = users.get(req.params.id);
+  if (!user) {
+    return res.status(404).json({ message: '用户不存在' });
+  }
+  
+  // 只返回公开信息
+  res.json({
+    id: user.id,
+    name: user.name,
+    nickname: user.nickname,
+    avatar: user.avatar,
+    grade: user.grade,
+    major: user.major,
+    bio: user.bio,
+    projectName: user.projectName,
+    statusTag: user.statusTag,
+    techTags: user.techTags || [],
+    designTags: user.designTags || [],
+    interestTags: user.interestTags || [],
     wechatMasked: user.wechatMasked || '***'
   });
 });
@@ -42,14 +66,14 @@ router.post('/profile', authMiddleware, (req, res) => {
   }
   
   const {
-    avatar, name, grade, major, wechatId, bio, projectName,
-    statusTag, techTags, designTags, interestTags
+    avatar, name, nickname, grade, major, wechatId, bio, 
+    projectName, statusTag, techTags, designTags, interestTags
   } = req.body;
   
-  // 更新字段
   Object.assign(user, {
     avatar: avatar || user.avatar,
     name: name || user.name,
+    nickname: nickname || user.nickname,
     grade: grade || user.grade,
     major: major || user.major,
     wechatId: wechatId || user.wechatId,
@@ -69,12 +93,72 @@ router.post('/profile', authMiddleware, (req, res) => {
 
 // 获取用户统计
 router.get('/stats', authMiddleware, (req, res) => {
-  // TODO: 统计用户数据
+  const userId = req.userId;
+  
+  // 统计帖子数
+  const postCount = Array.from(posts.values()).filter(p => p.userId === userId).length;
+  
+  // 统计匹配数
+  const matchCount = Array.from(matches.values()).filter(
+    m => m.userA === userId || m.userB === userId
+  ).length;
+  
+  // 统计活动参与数
+  const eventCount = 0; // TODO: 实现活动报名统计
+  
   res.json({
-    links: 0,
-    posts: 0,
-    events: 0
+    links: matchCount,
+    posts: postCount,
+    events: eventCount
   });
+});
+
+// 获取我的帖子列表
+router.get('/my-posts', authMiddleware, (req, res) => {
+  const userId = req.userId;
+  const myPosts = Array.from(posts.values())
+    .filter(p => p.userId === userId)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  
+  res.json(myPosts);
+});
+
+// 搜索用户
+router.get('/search', (req, res) => {
+  const { keyword, tag, grade } = req.query;
+  
+  let results = Array.from(users.values()).filter(u => u.isProfileComplete);
+  
+  if (keyword) {
+    const lowerKeyword = keyword.toLowerCase();
+    results = results.filter(u => 
+      (u.name && u.name.toLowerCase().includes(lowerKeyword)) ||
+      (u.major && u.major.toLowerCase().includes(lowerKeyword)) ||
+      (u.bio && u.bio.toLowerCase().includes(lowerKeyword))
+    );
+  }
+  
+  if (tag) {
+    results = results.filter(u => {
+      const allTags = [...(u.techTags || []), ...(u.designTags || []), ...(u.interestTags || [])];
+      return allTags.includes(tag);
+    });
+  }
+  
+  if (grade) {
+    results = results.filter(u => u.grade === grade);
+  }
+  
+  res.json(results.map(u => ({
+    id: u.id,
+    name: u.name,
+    nickname: u.nickname,
+    avatar: u.avatar,
+    grade: u.grade,
+    major: u.major,
+    statusTag: u.statusTag,
+    bio: u.bio?.substring(0, 50)
+  })));
 });
 
 module.exports = router;
