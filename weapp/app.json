@@ -28,21 +28,15 @@
     "list": [
       {
         "pagePath": "pages/community/community",
-        "text": "社区",
-        "iconPath": "images/tab_community.png",
-        "selectedIconPath": "images/tab_community_active.png"
+        "text": "社区"
       },
       {
         "pagePath": "pages/social/social",
-        "text": "社交",
-        "iconPath": "images/tab_social.png",
-        "selectedIconPath": "images/tab_social_active.png"
+        "text": "社交"
       },
       {
         "pagePath": "pages/profile/profile",
-        "text": "我的",
-        "iconPath": "images/tab_profile.png",
-        "selectedIconPath": "images/tab_profile_active.png"
+        "text": "我的"
       }
     ]
   },
