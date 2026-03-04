@@ -11,26 +11,34 @@ App({
   onLaunch() {
     // 检查登录状态
     const token = wx.getStorageSync('token');
+    const userInfo = wx.getStorageSync('userInfo');
+    
     if (token) {
       this.globalData.token = token;
-      this.getUserInfo();
+      this.globalData.userInfo = userInfo;
     }
   },
 
   // 获取用户信息
   getUserInfo() {
+    const token = wx.getStorageSync('token');
+    if (!token) return;
+    
     wx.request({
       url: `${API_BASE}/user/me`,
       header: {
-        'Authorization': `Bearer ${this.globalData.token}`
+        'Authorization': `Bearer ${token}`
       },
       success: (res) => {
         if (res.statusCode === 200) {
           this.globalData.userInfo = res.data;
-        } else {
+          wx.setStorageSync('userInfo', res.data);
+        } else if (res.statusCode === 401) {
           // Token失效，清除登录状态
           wx.removeStorageSync('token');
+          wx.removeStorageSync('userInfo');
           this.globalData.token = null;
+          this.globalData.userInfo = null;
         }
       }
     });
@@ -38,7 +46,16 @@ App({
 
   // 全局请求封装
   request(options) {
-    const { url, method = 'GET', data, success, fail } = options;
+    const { url, method = 'GET', data, success, fail, needAuth = true } = options;
+    
+    const token = wx.getStorageSync('token');
+    
+    // 需要登录但未登录
+    if (needAuth && !token) {
+      // 返回401让页面自己处理
+      success && success({ statusCode: 401, data: { message: '未登录' } });
+      return;
+    }
     
     wx.request({
       url: `${API_BASE}${url}`,
@@ -46,13 +63,15 @@ App({
       data,
       header: {
         'Content-Type': 'application/json',
-        'Authorization': this.globalData.token ? `Bearer ${this.globalData.token}` : ''
+        'Authorization': token ? `Bearer ${token}` : ''
       },
       success: (res) => {
         if (res.statusCode === 401) {
-          // 未授权，跳转到登录页
-          wx.navigateTo({ url: '/pages/login/login' });
-          return;
+          // Token失效，清除状态
+          wx.removeStorageSync('token');
+          wx.removeStorageSync('userInfo');
+          this.globalData.token = null;
+          this.globalData.userInfo = null;
         }
         success && success(res);
       },

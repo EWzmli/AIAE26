@@ -19,6 +19,7 @@ Page({
 
   onShow() {
     this.loadPosts();
+    this.loadEvents();
   },
 
   switchTab(e) {
@@ -29,28 +30,34 @@ Page({
   loadPosts() {
     const { roleFilter, commitmentFilter } = this.data;
     
-    app.request({
-      url: '/posts',
+    wx.request({
+      url: `${app.globalData.API_BASE}/posts`,
       data: {
         roleType: roleFilter === '全部' ? '' : roleFilter,
         commitment: commitmentFilter === '全部' ? '' : commitmentFilter
       },
       success: (res) => {
         if (res.statusCode === 200) {
-          this.setData({ posts: res.data });
+          this.setData({ posts: res.data.list || [] });
         }
+      },
+      fail: () => {
+        this.setData({ posts: [] });
       }
     });
   },
 
   // 加载活动
   loadEvents() {
-    app.request({
-      url: '/events',
+    wx.request({
+      url: `${app.globalData.API_BASE}/events`,
       success: (res) => {
         if (res.statusCode === 200) {
-          this.setData({ events: res.data });
+          this.setData({ events: res.data || [] });
         }
+      },
+      fail: () => {
+        this.setData({ events: [] });
       }
     });
   },
@@ -86,6 +93,15 @@ Page({
   },
 
   goToCreatePost() {
+    // 检查登录
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.navigateTo({
+        url: '/pages/login/login'
+      });
+      return;
+    }
+    
     wx.navigateTo({
       url: '/pages/community/create-post'
     });

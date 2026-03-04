@@ -26,7 +26,54 @@ Page({
     selectedDesignTags: [],
     selectedInterests: [],
     
-    canSubmit: false
+    canSubmit: false,
+    isSubmitting: false
+  },
+
+  onLoad() {
+    // 检查登录状态
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.redirectTo({
+        url: '/pages/login/login'
+      });
+      return;
+    }
+    
+    // 加载已有资料
+    this.loadUserProfile();
+  },
+
+  // 加载用户已有资料
+  loadUserProfile() {
+    const token = wx.getStorageSync('token');
+    
+    wx.request({
+      url: `${app.globalData.API_BASE}/user/me`,
+      header: {
+        'Authorization': `Bearer ${token}`
+      },
+      success: (res) => {
+        if (res.statusCode === 200 && res.data) {
+          const user = res.data;
+          this.setData({
+            avatar: user.avatar || '',
+            name: user.name || '',
+            grade: user.grade || '',
+            gradeIndex: GRADE_OPTIONS.indexOf(user.grade),
+            major: user.major || '',
+            wechatId: user.wechatId || '',
+            bio: user.bio || '',
+            projectName: user.projectName || '',
+            selectedStatus: user.statusTag || '',
+            selectedTechTags: user.techTags || [],
+            selectedDesignTags: user.designTags || [],
+            selectedInterests: user.interestTags || []
+          });
+          this.checkCanSubmit();
+        }
+      }
+    });
   },
 
   // 头像选择
@@ -36,7 +83,7 @@ Page({
       mediaType: ['image'],
       success: (res) => {
         const tempFilePath = res.tempFiles[0].tempFilePath;
-        // TODO: 上传到云存储（待配置）
+        // 开发阶段直接使用本地路径
         this.setData({ avatar: tempFilePath });
       }
     });
@@ -83,7 +130,7 @@ Page({
 
   toggleTechTag(e) {
     const tag = e.currentTarget.dataset.tag;
-    const tags = this.data.selectedTechTags;
+    const tags = [...this.data.selectedTechTags];
     const index = tags.indexOf(tag);
     
     if (index > -1) {
@@ -100,7 +147,7 @@ Page({
 
   toggleDesignTag(e) {
     const tag = e.currentTarget.dataset.tag;
-    const tags = this.data.selectedDesignTags;
+    const tags = [...this.data.selectedDesignTags];
     const index = tags.indexOf(tag);
     
     if (index > -1) {
@@ -117,7 +164,7 @@ Page({
 
   toggleInterest(e) {
     const tag = e.currentTarget.dataset.tag;
-    const tags = this.data.selectedInterests;
+    const tags = [...this.data.selectedInterests];
     const index = tags.indexOf(tag);
     
     if (index > -1) {
@@ -141,10 +188,14 @@ Page({
 
   // 提交
   submit() {
+    if (!this.data.canSubmit || this.data.isSubmitting) return;
+
     const {
       avatar, name, grade, major, wechatId, bio, projectName,
       selectedStatus, selectedTechTags, selectedDesignTags, selectedInterests
     } = this.data;
+
+    this.setData({ isSubmitting: true });
 
     const data = {
       avatar,
@@ -160,12 +211,23 @@ Page({
       interestTags: selectedInterests
     };
 
-    app.request({
-      url: '/user/profile',
+    const token = wx.getStorageSync('token');
+
+    wx.request({
+      url: `${app.globalData.API_BASE}/user/profile`,
       method: 'POST',
+      header: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       data,
       success: (res) => {
+        this.setData({ isSubmitting: false });
+        
         if (res.statusCode === 200) {
+          // 保存用户信息
+          wx.setStorageSync('userInfo', { ...data, isProfileComplete: true });
+          
           wx.showToast({
             title: '保存成功',
             icon: 'success'
@@ -178,10 +240,17 @@ Page({
           }, 1500);
         } else {
           wx.showToast({
-            title: res.data.message || '保存失败',
+            title: res.data?.message || '保存失败',
             icon: 'none'
           });
         }
+      },
+      fail: () => {
+        this.setData({ isSubmitting: false });
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none'
+        });
       }
     });
   }
