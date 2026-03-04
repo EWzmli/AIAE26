@@ -61,5 +61,15 @@
       <text>• 仅限上海交通大学校内用户使用</text>
       <text>• 邮箱格式：学号@sjtu.edu.cn</text>
     </view>
+
+    <!-- 开发测试入口 -->
+    <view class="dev-section">
+      <view class="dev-divider">
+        <text>开发测试</text>
+      </view>
+      <button class="btn btn-dev" bindtap="devLogin">
+        跳过登录（开发模式）
+      </button>
+    </view>
   </view>
 </view>

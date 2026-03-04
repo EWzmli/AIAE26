@@ -128,6 +128,42 @@ Page({
     });
   },
 
+  // 开发测试入口 - 跳过登录
+  devLogin() {
+    // 模拟登录数据
+    const mockUser = {
+      id: 'dev001',
+      nickname: '测试用户',
+      realName: '开发者',
+      grade: '研二',
+      major: '计算机科学',
+      bio: '这是开发测试模式',
+      tags: ['前端', '创业', 'AI'],
+      isProfileComplete: true
+    };
+    const mockToken = 'dev_token_' + Date.now();
+
+    // 保存到本地
+    wx.setStorageSync('token', mockToken);
+    wx.setStorageSync('userInfo', mockUser);
+    
+    // 设置全局数据
+    app.globalData.token = mockToken;
+    app.globalData.userInfo = mockUser;
+
+    wx.showToast({
+      title: '开发模式登录',
+      icon: 'success'
+    });
+
+    // 延迟跳转到首页
+    setTimeout(() => {
+      wx.switchTab({
+        url: '/pages/community/community'
+      });
+    }, 1000);
+  },
+
   goBack() {
     wx.navigateBack();
   }
