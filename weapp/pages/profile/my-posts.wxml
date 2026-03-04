@@ -1,0 +1,25 @@
+<!-- 我的帖子 -->
+<view class="container">
+  <view class="loading" wx:if="{{isLoading}}">加载中...</view>
+  
+  <view class="empty-state" wx:if="{{!isLoading && posts.length === 0}}">
+    <text class="empty-icon">📝</text>
+    <text class="empty-text">还没有发布过帖子</text>
+    <button class="btn-create" bindtap="goToCreate">去发布</button>
+  </view>
+  
+  <view class="post-list" wx:if="{{posts.length > 0}}">
+    <view class="post-card" wx:for="{{posts}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+      <view class="post-header">
+        <text class="post-type">{{item.type === 'find_partner' ? '找合伙人' : '招聘'}}</text>
+        <text class="post-time">{{item.timeAgo}}</text>
+      </view>
+      <text class="post-title">{{item.title}}</text>
+      <text class="post-content">{{item.content}}</text>
+      <view class="post-footer">
+        <text class="post-status {{item.status}}">{{item.status === 'approved' ? '已通过' : '审核中'}}</text>
+        <text class="delete-btn" catchtap="deletePost" data-id="{{item.id}}">删除</text>
+      </view>
+    </view>
+  </view>
+</view>

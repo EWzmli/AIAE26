@@ -1,0 +1,68 @@
+<!-- 我的匹配 -->
+<view class="container">
+  <!-- Tab切换 -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'matches' ? 'active' : ''}}" bindtap="switchTab" data-tab="matches">
+      已匹配({{matches.length}})
+    </view>
+    <view class="tab-item {{activeTab === 'likes' ? 'active' : ''}}" bindtap="switchTab" data-tab="likes">
+      收到的喜欢({{receivedLikes.length}})
+    </view>
+  </view>
+
+  <view class="loading" wx:if="{{isLoading}}">加载中...</view>
+
+  <!-- 已匹配列表 -->
+  <view class="content" wx:if="{{activeTab === 'matches'}}">
+    <view class="empty-state" wx:if="{{!isLoading && matches.length === 0}}">
+      <text class="empty-icon">🤝</text>
+      <text class="empty-text">还没有匹配到伙伴</text>
+      <text class="empty-sub">去社交页发现更多同学吧</text>
+    </view>
+
+    <view class="match-list" wx:if="{{matches.length > 0}}">
+      <view class="match-card" wx:for="{{matches}}" wx:key="id">
+        <view class="user-info" bindtap="goToUserDetail" data-id="{{item.user.id}}">
+          <view class="user-avatar">{{item.user.name[0]}}</view>
+          <view class="user-detail">
+            <text class="user-name">{{item.user.name}}</text>
+            <text class="user-grade-major">{{item.user.grade}} · {{item.user.major}}</text>
+            <text class="user-bio">{{item.user.bio}}</text>
+          </view>
+        </view>
+        <view class="contact-info">
+          <text class="wechat-label">微信号：{{item.user.wechatId}}</text>
+          <button class="btn-copy" bindtap="copyWechat" data-wechat="{{item.user.wechatId}}">复制</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 收到的喜欢 -->
+  <view class="content" wx:if="{{activeTab === 'likes'}}">
+    <view class="empty-state" wx:if="{{!isLoading && receivedLikes.length === 0}}">
+      <text class="empty-icon">💌</text>
+      <text class="empty-text">还没有收到喜欢</text>
+      <text class="empty-sub">完善资料会获得更多关注哦</text>
+    </view>
+
+    <view class="like-list" wx:if="{{receivedLikes.length > 0}}">
+      <view class="like-card" wx:for="{{receivedLikes}}" wx:key="id">
+        <view class="user-info" bindtap="goToUserDetail" data-id="{{item.user.id}}">
+          <view class="user-avatar">{{item.user.name[0]}}</view>
+          <view class="user-detail">
+            <text class="user-name">{{item.user.name}}</text>
+            <text class="user-grade-major">{{item.user.grade}} · {{item.user.major}}</text>
+            <text class="user-status">{{item.user.statusTag}}</text>
+          </view>
+        </view>
+        <view class="like-message" wx:if="{{item.message}}">
+          <text>"{{item.message}}"</text>
+        </view>
+        <view class="like-actions">
+          <button class="btn-accept" bindtap="acceptLike" data-id="{{item.user.id}}">接受</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

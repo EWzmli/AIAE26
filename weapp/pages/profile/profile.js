@@ -11,25 +11,39 @@ Page({
   },
 
   onLoad() {
-    this.loadUserInfo();
-    this.loadStats();
+    this.checkLogin();
   },
 
   onShow() {
     this.loadUserInfo();
+    this.loadStats();
+  },
+
+  checkLogin() {
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.redirectTo({
+        url: '/pages/login/login'
+      });
+    }
   },
 
   loadUserInfo() {
-    const userInfo = app.globalData.userInfo;
+    const userInfo = wx.getStorageSync('userInfo');
     if (userInfo) {
       this.setData({ userInfo });
-    } else {
-      app.request({
-        url: '/user/me',
+    }
+    
+    // 同时从后端获取最新数据
+    const token = wx.getStorageSync('token');
+    if (token) {
+      wx.request({
+        url: `${app.globalData.API_BASE}/user/me`,
+        header: { 'Authorization': `Bearer ${token}` },
         success: (res) => {
           if (res.statusCode === 200) {
             this.setData({ userInfo: res.data });
-            app.globalData.userInfo = res.data;
+            wx.setStorageSync('userInfo', res.data);
           }
         }
       });
@@ -37,8 +51,12 @@ Page({
   },
 
   loadStats() {
-    app.request({
-      url: '/user/stats',
+    const token = wx.getStorageSync('token');
+    if (!token) return;
+    
+    wx.request({
+      url: `${app.globalData.API_BASE}/user/stats`,
+      header: { 'Authorization': `Bearer ${token}` },
       success: (res) => {
         if (res.statusCode === 200) {
           this.setData({ stats: res.data });
@@ -54,30 +72,26 @@ Page({
   },
 
   goToMyPosts() {
-    wx.showToast({
-      title: '功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/profile/my-posts'
     });
   },
 
   goToMyEvents() {
-    wx.showToast({
-      title: '功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/profile/my-events'
     });
   },
 
   goToMyLinks() {
-    wx.showToast({
-      title: '功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/profile/my-links'
     });
   },
 
   goToBusinessCard() {
-    wx.showToast({
-      title: '名片功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/profile/card'
     });
   },
 
@@ -88,6 +102,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           wx.removeStorageSync('token');
+          wx.removeStorageSync('userInfo');
           app.globalData.token = null;
           app.globalData.userInfo = null;
           

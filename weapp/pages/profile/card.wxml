@@ -1,0 +1,48 @@
+<!-- 名片页面 -->
+<view class="container">
+  <view class="card-preview">
+    <!-- 名片内容 -->
+    <view class="business-card">
+      <view class="card-header">
+        <text class="card-logo">AIAE</text>
+        <text class="card-subtitle">上海交通大学创业者社区</text>
+      </view>
+      
+      <view class="card-body">
+        <view class="user-avatar-large">
+          <text>{{userInfo.name ? userInfo.name[0] : '?'}}</text>
+        </view>
+        
+        <view class="user-info">
+          <text class="user-name">{{userInfo.name || '未命名'}}</text>
+          <text class="user-grade-major">{{userInfo.grade || ''}} · {{userInfo.major || ''}}</text>
+          
+          <view class="status-badge" wx:if="{{userInfo.statusTag}}">
+            {{userInfo.statusTag}}
+          </view>
+          
+          <text class="user-bio">{{userInfo.bio || '暂无简介'}}</text>
+        </view>
+      </view>
+      
+      <view class="card-footer">
+        <view class="tags-row" wx:if="{{userInfo.techTags && userInfo.techTags.length > 0}}">
+          <text class="mini-tag" wx:for="{{userInfo.techTags.slice(0,3)}}" wx:key="*this">{{item}}</text>
+        </view>
+        <text class="card-tip">扫码添加我为好友</text>
+      </view>
+    </view>
+    
+    <!-- 画布（用于生成图片） -->
+    <canvas canvas-id="cardCanvas" style="width: 375px; height: 600px; position: fixed; left: -9999px;"></canvas>
+  </view>
+  
+  <view class="action-buttons">
+    <button class="btn btn-primary" bindtap="saveCard">保存到相册</button>
+    <button class="btn btn-outline" open-type="share">分享给好友</button>
+  </view>
+  
+  <view class="tips">
+    <text>名片可用于线下活动交换，对方扫码可查看你的详细资料</text>
+  </view>
+</view>

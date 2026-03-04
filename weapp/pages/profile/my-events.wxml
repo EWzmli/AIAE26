@@ -1,0 +1,25 @@
+<!-- 我的活动 -->
+<view class="container">
+  <view class="loading" wx:if="{{isLoading}}">加载中...</view>
+
+  <view class="empty-state" wx:if="{{!isLoading && registrations.length === 0}}">
+    <text class="empty-icon">📅</text>
+    <text class="empty-text">还没有报名活动</text>
+    <button class="btn-explore" bindtap="goToEvents">去发现</button>
+  </view>
+
+  <view class="event-list" wx:if="{{registrations.length > 0}}">
+    <view class="event-card" wx:for="{{registrations}}" wx:key="id">
+      <view class="event-info" bindtap="goToDetail" data-id="{{item.event.id}}">
+        <image class="event-poster" src="{{item.event.poster || '/images/default-event.png'}}" mode="aspectFill" />
+        <view class="event-detail">
+          <text class="event-title">{{item.event.title}}</text>
+          <text class="event-time">{{item.event.startTime}}</text>
+          <text class="event-location">{{item.event.location}}</text>
+          <text class="reg-status {{item.status}}">{{item.status === 'registered' ? '已报名' : '已签到'}}</text>
+        </view>
+      </view>
+      <button class="btn-cancel" bindtap="cancelRegistration" data-id="{{item.event.id}}">取消报名</button>
+    </view>
+  </view>
+</view>
