@@ -1,0 +1,33 @@
+<view class="container">
+  <view class="event-header">
+    <text class="event-type">{{event.type}}</text>
+    <text class="event-status">报名中</text>
+  </view>
+  
+  <text class="event-title">{{event.title}}</text>
+  
+  <view class="info-section">
+    <view class="info-item">
+      <text class="info-icon">📅</text>
+      <text class="info-text">{{event.date}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-icon">📍</text>
+      <text class="info-text">{{event.location}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-icon">👥</text>
+      <text class="info-text">{{event.joinCount}}人已报名</text>
+    </view>
+  </view>
+  
+  <view class="detail-section">
+    <text class="section-title">活动详情</text>
+    <text class="detail-content">{{event.description}}</text>
+    <text class="detail-content">{{event.detail}}</text>
+  </view>
+  
+  <view class="action-bar">
+    <button class="join-btn" bindtap="joinEvent">立即报名</button>
+  </view>
+</view>

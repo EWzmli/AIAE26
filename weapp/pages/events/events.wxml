@@ -1,0 +1,28 @@
+<view class="container">
+  <view class="header">
+    <text class="title">校园活动</text>
+    <view class="filter">
+      <text class="filter-item active">全部</text>
+      <text class="filter-item">讲座</text>
+      <text class="filter-item">比赛</text>
+      <text class="filter-item">聚会</text>
+    </view>
+  </view>
+  
+  <scroll-view scroll-y class="event-list">
+    <view wx:for="{{events}}" wx:key="id" class="event-card" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="event-header">
+        <text class="event-type">{{item.type}}</text>
+        <text class="event-date">{{item.date}}</text>
+      </view>
+      <text class="event-title">{{item.title}}</text>
+      <text class="event-desc">{{item.description}}</text>
+      <view class="event-footer">
+        <text class="event-location">📍 {{item.location}}</text>
+        <text class="event-join">{{item.joinCount}}人参与</text>
+      </view>
+    </view>
+  </scroll-view>
+  
+  <view class="fab" bindtap="createEvent">+</view>
+</view>

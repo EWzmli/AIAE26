@@ -1,0 +1,24 @@
+<view class="container">
+  <view class="header">
+    <text class="title">消息通知</text>
+  </view>
+  
+  <view class="message-list">
+    <view wx:for="{{messages}}" wx:key="id" class="message-card">
+      <view class="message-icon">{{item.icon}}</view>
+      <view class="message-content">
+        <view class="message-header">
+          <text class="message-title">{{item.title}}</text>
+          <text class="message-time">{{item.time}}</text>
+        </view>
+        <text class="message-text">{{item.content}}</text>
+      </view>
+      <view wx:if="{{item.unread}}" class="unread-dot"></view>
+    </view>
+  </view>
+  
+  <view wx:if="{{messages.length === 0}}" class="empty">
+    <text class="empty-icon">📭</text>
+    <text class="empty-text">暂无消息</text>
+  </view>
+</view>

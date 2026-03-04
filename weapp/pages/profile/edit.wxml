@@ -1,0 +1,46 @@
+<view class="container">
+  <view class="header">
+    <text class="title">编辑个人资料</text>
+  </view>
+  
+  <view class="form">
+    <view class="form-item">
+      <text class="label">昵称</text>
+      <input type="text" placeholder="请输入昵称" value="{{userInfo.nickname}}" bindinput="onNicknameInput"/>
+    </view>
+    
+    <view class="form-item">
+      <text class="label">真实姓名</text>
+      <input type="text" placeholder="请输入真实姓名" value="{{userInfo.realName}}" bindinput="onRealNameInput"/>
+    </view>
+    
+    <view class="form-item">
+      <text class="label">年级</text>
+      <picker bindchange="onGradeChange" value="{{gradeIndex}}" range="{{grades}}">
+        <view class="picker">{{grades[gradeIndex] || '请选择年级'}}</view>
+      </picker>
+    </view>
+    
+    <view class="form-item">
+      <text class="label">专业</text>
+      <input type="text" placeholder="请输入专业" value="{{userInfo.major}}" bindinput="onMajorInput"/>
+    </view>
+    
+    <view class="form-item">
+      <text class="label">个人简介</text>
+      <textarea placeholder="介绍你自己..." value="{{userInfo.bio}}" bindinput="onBioInput"/>
+    </view>
+    
+    <view class="form-item">
+      <text class="label">技能标签</text>
+      <view class="tags">
+        <view wx:for="{{userInfo.tags}}" wx:key="*this" class="tag">
+          {{item}}
+        </view>
+        <view class="tag add" bindtap="addTag">+</view>
+      </view>
+    </view>
+  </view>
+  
+  <button class="save-btn" bindtap="saveProfile">保存</button>
+</view>

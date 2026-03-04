@@ -1,0 +1,22 @@
+<view class="container">
+  <view class="form">
+    <view class="form-item">
+      <input type="text" placeholder="请输入标题" value="{{title}}" bindinput="onTitleInput"/>
+    </view>
+    
+    <view class="form-item">
+      <textarea placeholder="详细描述你的需求..." value="{{content}}" bindinput="onContentInput"/>
+    </view>
+    
+    <view class="form-item">
+      <text class="label">选择标签</text>
+      <view class="tags">
+        <view wx:for="{{tagList}}" wx:key="*this" class="tag {{selectedTags.includes(item) ? 'active' : ''}}" bindtap="selectTag" data-tag="{{item}}">
+          {{item}}
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <button class="submit-btn" bindtap="submitPost">发布</button>
+</view>

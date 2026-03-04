@@ -1,0 +1,32 @@
+<view class="container">
+  <view class="post-header">
+    <view class="author-info">
+      <view class="avatar">{{post.author[0]}}</view>
+      <view class="author-meta">
+        <text class="author-name">{{post.author}}</text>
+        <text class="post-time">{{post.time}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <text class="post-title">{{post.title}}</text>
+  <text class="post-content">{{post.content}}</text>
+  
+  <view class="post-actions">
+    <text class="action" bindtap="likePost">❤️ {{post.likes}}</text>
+    <text class="action">💬 {{post.comments}}</text>
+    <text class="action">↗️ 分享</text>
+  </view>
+  
+  <view class="comments-section">
+    <text class="section-title">评论 ({{post.comments}})</text>
+    <view wx:for="{{commentList}}" wx:key="id" class="comment">
+      <view class="comment-avatar">{{item.author[0]}}</view>
+      <view class="comment-content">
+        <text class="comment-author">{{item.author}}</text>
+        <text class="comment-text">{{item.content}}</text>
+        <text class="comment-time">{{item.time}}</text>
+      </view>
+    </view>
+  </view>
+</view>

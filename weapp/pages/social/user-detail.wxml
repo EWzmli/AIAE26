@@ -1,0 +1,25 @@
+<view class="container">
+  <view class="profile-header">
+    <view class="avatar">{{user.name[0]}}</view>
+    <text class="name">{{user.name}}</text>
+    <text class="info">{{user.grade}} · {{user.major}}</text>
+    <text class="bio">{{user.bio}}</text>
+    
+    <view class="tags">
+      <view wx:for="{{user.tags}}" wx:key="*this" class="tag">{{item}}</view>
+    </view>
+    
+    <view class="actions">
+      <button class="link-btn" bindtap="sendLink">申请Link</button>
+      <button class="msg-btn" bindtap="sendMessage">私信</button>
+    </view>
+  </view>
+  
+  <view class="section">
+    <text class="section-title">TA的动态</text>
+    <view wx:for="{{posts}}" wx:key="id" class="post-item">
+      <text class="post-title">{{item.title}}</text>
+      <text class="post-time">{{item.time}}</text>
+    </view>
+  </view>
+</view>
