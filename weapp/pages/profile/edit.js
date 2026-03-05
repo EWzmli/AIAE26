@@ -3,11 +3,15 @@ const app = getApp();
 
 Page({
   data: {
-    userInfo: {},
+    userInfo: {
+      techTags: [],
+      interestTags: []
+    },
     grades: ['本科大一', '本科大二', '本科大三', '本科大四', '硕士', '博士'],
     gradeIndex: 0,
     statusTags: ['寻找合伙人', '有项目找技术', '有技术找项目', '寻找投资', '资源共享'],
-    tempAvatar: null
+    tempAvatar: null,
+    bioLength: 0
   },
 
   onLoad() {
@@ -27,12 +31,19 @@ Page({
   },
 
   loadUserInfo() {
-    const userInfo = wx.getStorageSync('userInfo') || {};
+    let userInfo = wx.getStorageSync('userInfo') || {};
+    
+    // 确保数组存在
+    if (!userInfo.techTags) userInfo.techTags = [];
+    if (!userInfo.interestTags) userInfo.interestTags = [];
+    
     const gradeIndex = this.data.grades.indexOf(userInfo.grade);
+    const bioLength = userInfo.bio ? userInfo.bio.length : 0;
     
     this.setData({
       userInfo,
-      gradeIndex: gradeIndex >= 0 ? gradeIndex : 0
+      gradeIndex: gradeIndex >= 0 ? gradeIndex : 0,
+      bioLength
     });
   },
 
@@ -64,7 +75,11 @@ Page({
   },
 
   onBioInput(e) {
-    this.setData({ 'userInfo.bio': e.detail.value });
+    const bio = e.detail.value;
+    this.setData({
+      'userInfo.bio': bio,
+      bioLength: bio ? bio.length : 0
+    });
   },
 
   onWechatInput(e) {
@@ -89,10 +104,13 @@ Page({
       editable: true,
       success: (res) => {
         if (res.confirm && res.content) {
-          const tags = this.data.userInfo.techTags || [];
+          const userInfo = this.data.userInfo;
+          const tags = userInfo.techTags || [];
           if (!tags.includes(res.content)) {
             tags.push(res.content);
-            this.setData({ 'userInfo.techTags': tags });
+            this.setData({
+              'userInfo.techTags': tags
+            });
           }
         }
       }
@@ -102,9 +120,12 @@ Page({
   // 删除技能标签
   removeTechTag(e) {
     const index = e.currentTarget.dataset.index;
-    const tags = this.data.userInfo.techTags || [];
+    const userInfo = this.data.userInfo;
+    const tags = userInfo.techTags || [];
     tags.splice(index, 1);
-    this.setData({ 'userInfo.techTags': tags });
+    this.setData({
+      'userInfo.techTags': tags
+    });
   },
 
   // 添加兴趣标签
@@ -115,10 +136,13 @@ Page({
       editable: true,
       success: (res) => {
         if (res.confirm && res.content) {
-          const tags = this.data.userInfo.interestTags || [];
+          const userInfo = this.data.userInfo;
+          const tags = userInfo.interestTags || [];
           if (!tags.includes(res.content)) {
             tags.push(res.content);
-            this.setData({ 'userInfo.interestTags': tags });
+            this.setData({
+              'userInfo.interestTags': tags
+            });
           }
         }
       }
@@ -128,9 +152,12 @@ Page({
   // 删除兴趣标签
   removeInterestTag(e) {
     const index = e.currentTarget.dataset.index;
-    const tags = this.data.userInfo.interestTags || [];
+    const userInfo = this.data.userInfo;
+    const tags = userInfo.interestTags || [];
     tags.splice(index, 1);
-    this.setData({ 'userInfo.interestTags': tags });
+    this.setData({
+      'userInfo.interestTags': tags
+    });
   },
 
   // 保存资料

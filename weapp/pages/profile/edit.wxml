@@ -121,7 +121,7 @@
           bindinput="onBioInput"
           maxlength="200"
         />
-        <text class="textarea-count">{{(userInfo.bio || '').length}}/200</text>
+        <text class="textarea-count">{{bioLength}}/200</text>
       </view>
     </view>
 
@@ -134,14 +134,14 @@
       
       <view class="tags-list">
         <view 
-          wx:for="{{userInfo.techTags || []}}" 
-          wx:key="*this"
+          wx:for="{{userInfo.techTags}}" 
+          wx:key="index"
           class="tag tech-tag"
         >
           <text>{{item}}</text>
           <text class="tag-remove" bindtap="removeTechTag" data-index="{{index}}">×</text>
         </view>
-        <text wx:if="{{!(userInfo.techTags && userInfo.techTags.length)}}" class="empty-tip">添加技能标签，方便他人找到你</text>
+        <text wx:if="{{!userInfo.techTags || userInfo.techTags.length === 0}}" class="empty-tip">添加技能标签，方便他人找到你</text>
       </view>
     </view>
 
@@ -154,14 +154,14 @@
       
       <view class="tags-list">
         <view 
-          wx:for="{{userInfo.interestTags || []}}" 
-          wx:key="*this"
+          wx:for="{{userInfo.interestTags}}" 
+          wx:key="index"
           class="tag interest-tag"
         >
           <text>{{item}}</text>
           <text class="tag-remove" bindtap="removeInterestTag" data-index="{{index}}">×</text>
         </view>
-        <text wx:if="{{!(userInfo.interestTags && userInfo.interestTags.length)}}" class="empty-tip">添加兴趣标签，找到志同道合的伙伴</text>
+        <text wx:if="{{!userInfo.interestTags || userInfo.interestTags.length === 0}}" class="empty-tip">添加兴趣标签，找到志同道合的伙伴</text>
       </view>
     </view>
   </view>
