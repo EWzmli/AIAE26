@@ -1,11 +1,14 @@
 // 小程序入口
 const API_BASE = 'http://localhost:3000/api';
+const { CONFIG, getFeatures } = require('./config');
 
 App({
   globalData: {
     userInfo: null,
     token: null,
-    API_BASE: API_BASE
+    API_BASE: API_BASE,
+    config: CONFIG,
+    features: getFeatures()
   },
 
   onLaunch() {
@@ -17,6 +20,30 @@ App({
       this.globalData.token = token;
       this.globalData.userInfo = userInfo;
     }
+    
+    // 根据审核模式调整tabBar
+    this.adjustTabBar();
+  },
+  
+  // 根据审核模式调整tabBar
+  adjustTabBar() {
+    const features = this.globalData.features;
+    
+    if (CONFIG.AUDIT_MODE) {
+      // 审核模式：只保留"社区"和"我的"，隐藏"社交"
+      wx.setTabBarItem({
+        index: 0,
+        text: '社区'
+      });
+      
+      // 隐藏社交tab（index 1）
+      wx.hideTabBarRedDot({ index: 1 });
+    }
+  },
+  
+  // 检查功能是否可用（用于页面内判断）
+  checkFeature(featureName) {
+    return this.globalData.features[featureName] !== false;
   },
 
   // 获取用户信息

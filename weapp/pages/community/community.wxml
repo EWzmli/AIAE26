@@ -76,8 +76,8 @@
       <text>暂无招聘帖，来发第一个吧！</text>
     </view>
 
-    <!-- 发帖按钮 -->
-    <view class="fab" bindtap="goToCreatePost">
+    <!-- 发帖按钮（审核模式下隐藏） -->
+    <view wx:if="{{canCreatePost}}" class="fab" bindtap="goToCreatePost">
       <text class="fab-icon">+</text>
       <text>发布</text>
     </view>

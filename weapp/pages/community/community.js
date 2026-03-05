@@ -1,5 +1,6 @@
 const app = getApp();
 const { ROLE_OPTIONS, COMMITMENT_OPTIONS } = require('../../utils/tags');
+const { showAuditTip } = require('../../config');
 
 Page({
   data: {
@@ -9,10 +10,12 @@ Page({
     roleOptions: ['全部', ...ROLE_OPTIONS],
     commitmentOptions: ['全部', ...COMMITMENT_OPTIONS.map(c => c.label)],
     roleFilter: '',
-    commitmentFilter: ''
+    commitmentFilter: '',
+    canCreatePost: true  // 控制发帖按钮显示
   },
 
   onLoad() {
+    this.checkFeatures();
     this.loadPosts();
     this.loadEvents();
   },
@@ -20,6 +23,12 @@ Page({
   onShow() {
     this.loadPosts();
     this.loadEvents();
+  },
+  
+  // 检查功能开关
+  checkFeatures() {
+    const canCreatePost = app.checkFeature('POST_CREATE');
+    this.setData({ canCreatePost });
   },
 
   switchTab(e) {
@@ -93,6 +102,12 @@ Page({
   },
 
   goToCreatePost() {
+    // 检查功能开关
+    if (!app.checkFeature('POST_CREATE')) {
+      showAuditTip('POST_CREATE');
+      return;
+    }
+    
     // 检查登录
     const token = wx.getStorageSync('token');
     if (!token) {

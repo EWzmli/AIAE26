@@ -1,0 +1,45 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/register/register",
+    "pages/profile/profile",
+    "pages/profile/edit",
+    "pages/profile/card",
+    "pages/profile/avatar-select",
+    "pages/profile/my-posts",
+    "pages/profile/my-events",
+    "pages/profile/my-links",
+    "pages/community/community",
+    "pages/community/post-detail",
+    "pages/community/create-post",
+    "pages/events/events",
+    "pages/events/event-detail",
+    "pages/social/social",
+    "pages/social/user-detail",
+    "pages/messages/messages"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1a1a2e",
+    "navigationBarTitleText": "AIAE",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#1a1a2e",
+    "backgroundColor": "#fff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/community/community",
+        "text": "社区"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}
