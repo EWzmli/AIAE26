@@ -1,5 +1,6 @@
 // pages/profile/edit.js
 const app = getApp();
+const { createDefaultAvatar, getNameInitials } = require('../../utils/avatarGenerator');
 
 Page({
   data: {
@@ -11,7 +12,8 @@ Page({
     gradeIndex: 0,
     statusTags: ['寻找合伙人', '有项目找技术', '有技术找项目', '寻找投资', '资源共享'],
     tempAvatar: null,
-    bioLength: 0
+    bioLength: 0,
+    nameInitials: '?'
   },
 
   onLoad() {
@@ -40,10 +42,15 @@ Page({
     const gradeIndex = this.data.grades.indexOf(userInfo.grade);
     const bioLength = userInfo.bio ? userInfo.bio.length : 0;
     
+    // 计算姓名首字母
+    const name = userInfo.nickname || userInfo.name || '';
+    const nameInitials = name ? getNameInitials(name) : '?';
+    
     this.setData({
       userInfo,
       gradeIndex: gradeIndex >= 0 ? gradeIndex : 0,
-      bioLength
+      bioLength,
+      nameInitials
     });
   },
 
@@ -56,11 +63,25 @@ Page({
 
   // 表单输入处理
   onNicknameInput(e) {
-    this.setData({ 'userInfo.nickname': e.detail.value });
+    this.setData({ 
+      'userInfo.nickname': e.detail.value 
+    });
+    this.updateNameInitials();
   },
 
   onNameInput(e) {
-    this.setData({ 'userInfo.name': e.detail.value });
+    this.setData({ 
+      'userInfo.name': e.detail.value 
+    });
+    this.updateNameInitials();
+  },
+  
+  // 更新姓名首字母显示
+  updateNameInitials() {
+    const { userInfo } = this.data;
+    const name = userInfo.nickname || userInfo.name || '';
+    const nameInitials = name ? getNameInitials(name) : '?';
+    this.setData({ nameInitials });
   },
 
   onGradeChange(e) {

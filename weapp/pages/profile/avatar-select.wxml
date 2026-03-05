@@ -7,125 +7,40 @@
       <image wx:if="{{customAvatar}}" class="preview-image" src="{{customAvatar}}" mode="aspectFill"/>
       <view wx:else class="preview-placeholder">
         <text class="placeholder-icon">👤</text>
-        <text class="placeholder-text">请选择或生成头像</text>
+        <text class="placeholder-text">生成中...</text>
       </view>
     </view>
+    <text class="avatar-tip">点击预览大图</text>
   </view>
 
-  <!-- 标签切换 -->
-  <view class="tab-bar">
-    <view class="tab-item {{currentTab === 'preset' ? 'active' : ''}}" bindtap="switchTab" data-tab="preset">
-      <text class="tab-icon">🎨</text>
-      <text class="tab-text">预设头像</text>
-    </view>
-    <view class="tab-item {{currentTab === 'ai' ? 'active' : ''}}" bindtap="switchTab" data-tab="ai">
-      <text class="tab-icon">✨</text>
-      <text class="tab-text">AI生成</text>
-    </view>
-    <view class="tab-item {{currentTab === 'album' ? 'active' : ''}}" bindtap="switchTab" data-tab="album">
-      <text class="tab-icon">📷</text>
-      <text class="tab-text">相册上传</text>
-    </view>
-  </view>
-
-  <!-- 预设头像 -->
-  <view wx:if="{{currentTab === 'preset'}}" class="content-section">
-    <!-- 风格筛选 -->
-    <view class="style-filter">
-      <scroll-view scroll-x class="filter-scroll">
-        <view class="filter-list">
-          <view class="filter-item {{selectedStyle === 'all' ? 'active' : ''}}" bindtap="filterStyle" data-style="all">
-            <text>全部</text>
-          </view>
-          <view class="filter-item {{selectedStyle === 'business' ? 'active' : ''}}" bindtap="filterStyle" data-style="business">
-            <text>商务</text>
-          </view>
-          <view class="filter-item {{selectedStyle === 'tech' ? 'active' : ''}}" bindtap="filterStyle" data-style="tech">
-            <text>科技</text>
-          </view>
-          <view class="filter-item {{selectedStyle === 'creative' ? 'active' : ''}}" bindtap="filterStyle" data-style="creative">
-            <text>创意</text>
-          </view>
-          <view class="filter-item {{selectedStyle === 'nature' ? 'active' : ''}}" bindtap="filterStyle" data-style="nature">
-            <text>自然</text>
-          </view>
-        </view>
-      </scroll-view>
-    </view>
-
-    <!-- 预设头像网格 -->
-    <view class="avatar-grid">
-      <view 
-        wx:for="{{filteredPresets}}" 
-        wx:key="id"
-        class="avatar-item"
-        bindtap="selectPreset"
-        data-preset="{{item}}"
-      >
-        <view class="avatar-circle" style="background: linear-gradient(135deg, {{item.color}}, {{item.color}}dd);">
-          <text class="avatar-icon">{{item.icon}}</text>
-        </view>
+  <!-- 选项区域 -->
+  <view class="options-section">
+    <view class="option-card" bindtap="generateDefaultAvatar">
+      <view class="option-icon default">🎨</view>
+      <view class="option-content">
+        <text class="option-title">使用默认头像</text>
+        <text class="option-desc">根据您的姓名自动生成</text>
       </view>
+      <text class="option-arrow">›</text>
     </view>
-  </view>
 
-  <!-- AI生成 -->
-  <view wx:if="{{currentTab === 'ai'}}" class="content-section">
-    <view class="ai-section">
-      <view class="ai-description">
-        <text class="ai-title">🎨 AI 智能头像</text>
-        <text class="ai-subtitle">输入描述，AI为你生成独特头像</text>
-      </view>
-      
-      <view class="ai-input-area">
-        <textarea 
-          class="ai-input" 
-          placeholder="例如：科技感蓝色背景，创业者形象..."
-          value="{{aiPrompt}}"
-          bindinput="onPromptInput"
-          maxlength="100"
-        />
-        <button 
-          class="ai-generate-btn {{isGenerating ? 'loading' : ''}}" 
-          bindtap="generateAI"
-          disabled="{{isGenerating}}"
-        >
-          <text wx:if="{{!isGenerating}}">✨ 生成头像</text>
-          <text wx:else>生成中...</text>
-        </button>
-      </view>
-
-      <view class="generated-section" wx:if="{{generatedAvatars.length > 0}}">
-        <text class="section-title">推荐头像</text>
-        <view class="generated-grid">
-          <view 
-            wx:for="{{generatedAvatars}}" 
-            wx:key="id"
-            class="generated-item"
-            bindtap="selectGenerated"
-            data-path="{{item.path}}"
-          >
-            <image class="generated-image" src="{{item.path}}" mode="aspectFill"/>
-          </view>
-        </view>
-      </view>
-    </view>
-  </view>
-
-  <!-- 相册上传 -->
-  <view wx:if="{{currentTab === 'album'}}" class="content-section">
-    <view class="album-section">
-      <view class="album-option" bindtap="chooseFromAlbum">
-        <view class="option-icon">📷</view>
+    <view class="option-card" bindtap="chooseFromAlbum">
+      <view class="option-icon album">📷</view>
+      <view class="option-content">
         <text class="option-title">从相册选择</text>
-        <text class="option-desc">选择你喜欢的照片作为头像</text>
+        <text class="option-desc">使用自己喜欢的照片</text>
       </view>
-      
-      <view class="album-option" bindtap="generateTextAvatar">
-        <view class="option-icon">🔤</view>
-        <text class="option-title">生成文字头像</text>
-        <text class="option-desc">使用姓名首字母生成简约头像</text>
-      </view>
+      <text class="option-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 说明文字 -->
+  <view class="info-section">
+    <text class="info-title">💡 默认头像规则</text>
+    <view class="info-list">
+      <text class="info-item">• 中文姓名：显示后两位（如"张三丰"→"三丰"）</text>
+      <text class="info-item">• 英文姓名：显示首字母（如"David Jack"→"DJ"）</text>
+      <text class="info-item">• 颜色根据姓名自动匹配</text>
     </view>
   </view>
 

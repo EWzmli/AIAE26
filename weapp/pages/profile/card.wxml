@@ -36,72 +36,23 @@
     </view>
   </view>
 
-  <!-- 名片规格说明 -->
-  <view class="spec-section" wx:if="{{showActions}}">
-    <view class="spec-title">📐 打印规格</view>
-    <view class="spec-list">
-      <view class="spec-item">
-        <text class="spec-label">标准尺寸</text>
-        <text class="spec-value">90mm × 54mm</text>
-      </view>
-      <view class="spec-item">
-        <text class="spec-label">推荐纸张</text>
-        <text class="spec-value">300g铜版纸 / 特种纸</text>
-      </view>
-      <view class="spec-item">
-        <text class="spec-label">可选工艺</text>
-        <text class="spec-value">覆哑膜 / UV / 烫金</text>
-      </view>
-    </view>
-  </view>
-
   <!-- 操作按钮 -->
   <view class="action-section" wx:if="{{showActions}}">
-    <view class="action-title">名片操作</view>
-    
     <view class="action-grid">
       <view class="action-item" bindtap="saveCard">
         <view class="action-icon save">💾</view>
-        <text class="action-text">保存相册</text>
+        <text class="action-text">保存</text>
       </view>
       
       <view class="action-item" bindtap="printCard">
         <view class="action-icon print">🖨️</view>
-        <text class="action-text">打印名片</text>
-      </view>
-      
-      <view class="action-item" bindtap="generateCard">
-        <view class="action-icon refresh">🔄</view>
-        <text class="action-text">重新生成</text>
+        <text class="action-text">打印</text>
       </view>
       
       <button class="action-item share-btn" open-type="share">
         <view class="action-icon share">📤</view>
-        <text class="action-text">分享给好友</text>
+        <text class="action-text">分享</text>
       </button>
-    </view>
-  </view>
-
-  <!-- 打印指引 -->
-  <view class="guide-section" wx:if="{{showActions}}">
-    <view class="guide-title">📝 打印指引</view>
-    <view class="guide-steps">
-      <view class="step">
-        <view class="step-num">1</view>
-        <text class="step-text">点击"打印名片"保存高清图片</text>
-      </view>
-      <view class="step">
-        <view class="step-num">2</view>
-        <text class="step-text">前往打印店或使用手机打印机</text>
-      </view>
-      <view class="step">
-        <view class="step-num">3</view>
-        <text class="step-text">告知店员名片尺寸：90mm × 54mm</text>
-      </view>
-      <view class="step">
-        <view class="step-num">4</view>
-        <text class="step-text">选择300g以上纸张，建议覆哑膜</text>
-      </view>
     </view>
   </view>
 

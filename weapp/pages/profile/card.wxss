@@ -102,79 +102,37 @@
   color: #999;
 }
 
-/* 规格说明 */
-.spec-section {
-  background: #fff;
-  margin: 0 40rpx 30rpx;
-  border-radius: 20rpx;
-  padding: 30rpx;
-}
-
-.spec-title {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 24rpx;
-}
-
-.spec-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16rpx;
-}
-
-.spec-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16rpx 0;
-  border-bottom: 1rpx solid #f0f0f0;
-}
-
-.spec-item:last-child {
-  border-bottom: none;
-}
-
-.spec-label {
-  font-size: 26rpx;
-  color: #666;
-}
-
-.spec-value {
-  font-size: 26rpx;
-  color: #333;
-  font-weight: 500;
-}
-
 /* 操作按钮区域 */
 .action-section {
   background: #fff;
   margin: 0 40rpx 30rpx;
   border-radius: 20rpx;
-  padding: 30rpx;
-}
-
-.action-title {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 24rpx;
+  padding: 40rpx;
 }
 
 .action-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20rpx;
+  display: flex;
+  justify-content: space-around;
 }
 
 .action-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24rpx 0;
+  padding: 30rpx 40rpx;
   background: #f8f9fa;
   border-radius: 16rpx;
   transition: all 0.2s;
+  flex: 1;
+  margin: 0 15rpx;
+}
+
+.action-item:first-child {
+  margin-left: 0;
+}
+
+.action-item:last-child {
+  margin-right: 0;
 }
 
 .action-item:active {
@@ -183,14 +141,14 @@
 }
 
 .action-icon {
-  width: 80rpx;
-  height: 80rpx;
+  width: 100rpx;
+  height: 100rpx;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40rpx;
-  margin-bottom: 12rpx;
+  font-size: 48rpx;
+  margin-bottom: 16rpx;
 }
 
 .action-icon.save {
@@ -201,17 +159,14 @@
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
-.action-icon.refresh {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
 .action-icon.share {
   background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
 }
 
 .action-text {
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #666;
+  font-weight: 500;
 }
 
 .share-btn {
@@ -224,53 +179,6 @@
 
 .share-btn::after {
   border: none;
-}
-
-/* 打印指引 */
-.guide-section {
-  background: #fff;
-  margin: 0 40rpx 30rpx;
-  border-radius: 20rpx;
-  padding: 30rpx;
-}
-
-.guide-title {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 24rpx;
-}
-
-.guide-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 20rpx;
-}
-
-.step {
-  display: flex;
-  align-items: center;
-  gap: 20rpx;
-}
-
-.step-num {
-  width: 48rpx;
-  height: 48rpx;
-  background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
-  color: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24rpx;
-  font-weight: 600;
-  flex-shrink: 0;
-}
-
-.step-text {
-  font-size: 26rpx;
-  color: #666;
-  line-height: 1.5;
 }
 
 /* 提示信息 */

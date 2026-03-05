@@ -1,23 +1,31 @@
 const app = getApp();
-const { isSchoolEmail } = require('../../utils/util');
 
 Page({
   data: {
-    emailPrefix: '',
     email: '',
     verifyCode: '',
     showCodeInput: false,
     countdown: 0,
-    canSubmit: false
+    canSubmit: false,
+    isValidEmail: false,
+    isDevMode: false  // 开发模式，生产环境设为false
+  },
+
+  onLoad() {
+    // 检查是否是开发环境
+    const sysInfo = wx.getSystemInfoSync();
+    this.setData({
+      isDevMode: sysInfo.platform === 'devtools'
+    });
   },
 
   onEmailInput(e) {
-    const emailPrefix = e.detail.value;
-    const email = emailPrefix + '@sjtu.edu.cn';
+    const email = e.detail.value.trim();
+    const isValidEmail = this.validateEmail(email);
     this.setData({
-      emailPrefix,
       email,
-      canSubmit: emailPrefix.length > 0
+      isValidEmail,
+      canSubmit: isValidEmail && !this.data.showCodeInput
     });
   },
 
@@ -29,29 +37,41 @@ Page({
     });
   },
 
+  // 验证邮箱格式
+  validateEmail(email) {
+    const emailRegex = /^[a-zA-Z0-9._-]+@sjtu\.edu\.cn$/;
+    return emailRegex.test(email);
+  },
+
   sendCode() {
-    const { email } = this.data;
+    const { email, isValidEmail } = this.data;
     
-    if (!email.includes('@sjtu.edu.cn')) {
+    if (!isValidEmail) {
       wx.showToast({
-        title: '请使用校内邮箱',
+        title: '请输入正确的交大邮箱',
         icon: 'none'
       });
       return;
     }
 
+    wx.showLoading({ title: '发送中...' });
+
     // 调用发送验证码API
-    app.request({
-      url: '/auth/send-code',
+    wx.request({
+      url: `${app.globalData.API_BASE}/api/auth/send-code`,
       method: 'POST',
       data: { email },
       success: (res) => {
+        wx.hideLoading();
         if (res.statusCode === 200) {
           wx.showToast({
             title: '验证码已发送',
             icon: 'success'
           });
-          this.setData({ showCodeInput: true });
+          this.setData({ 
+            showCodeInput: true,
+            canSubmit: false
+          });
           this.startCountdown();
         } else {
           wx.showToast({
@@ -59,6 +79,13 @@ Page({
             icon: 'none'
           });
         }
+      },
+      fail: () => {
+        wx.hideLoading();
+        wx.showToast({
+          title: '网络错误，请重试',
+          icon: 'none'
+        });
       }
     });
   },
@@ -71,28 +98,45 @@ Page({
       countdown--;
       if (countdown <= 0) {
         clearInterval(timer);
+        this.setData({ 
+          countdown: 0,
+          canSubmit: this.data.isValidEmail
+        });
+      } else {
+        this.setData({ countdown });
       }
-      this.setData({ countdown });
     }, 1000);
   },
 
   submit() {
-    const { showCodeInput, email, verifyCode } = this.data;
+    const { showCodeInput, email, verifyCode, isValidEmail } = this.data;
     
     if (!showCodeInput) {
       this.sendCode();
       return;
     }
 
+    if (!isValidEmail) {
+      wx.showToast({
+        title: '邮箱格式错误',
+        icon: 'none'
+      });
+      return;
+    }
+
+    wx.showLoading({ title: '登录中...' });
+
     // 登录
-    app.request({
-      url: '/auth/login',
+    wx.request({
+      url: `${app.globalData.API_BASE}/api/auth/login`,
       method: 'POST',
       data: { email, code: verifyCode },
       success: (res) => {
+        wx.hideLoading();
         if (res.statusCode === 200 && res.data.token) {
           // 保存token
           wx.setStorageSync('token', res.data.token);
+          wx.setStorageSync('userEmail', email);
           app.globalData.token = res.data.token;
           
           wx.showToast({
@@ -101,14 +145,15 @@ Page({
           });
 
           // 检查是否完善资料
-          if (!res.data.user.isProfileComplete) {
-            wx.redirectTo({
-              url: '/pages/register/register'
-            });
+          if (res.data.isNewUser || !res.data.user.isProfileComplete) {
+            setTimeout(() => {
+              wx.redirectTo({
+                url: '/pages/register/register'
+              });
+            }, 1000);
           } else {
-            wx.switchTab({
-              url: '/pages/community/community'
-            });
+            // 获取完整用户信息
+            this.fetchUserInfo(res.data.token);
           }
         } else {
           wx.showToast({
@@ -116,12 +161,38 @@ Page({
             icon: 'none'
           });
         }
+      },
+      fail: () => {
+        wx.hideLoading();
+        wx.showToast({
+          title: '网络错误，请重试',
+          icon: 'none'
+        });
+      }
+    });
+  },
+
+  // 获取用户信息
+  fetchUserInfo(token) {
+    wx.request({
+      url: `${app.globalData.API_BASE}/api/user/me`,
+      header: { 'Authorization': `Bearer ${token}` },
+      success: (res) => {
+        if (res.statusCode === 200) {
+          wx.setStorageSync('userInfo', res.data);
+          app.globalData.userInfo = res.data;
+          
+          setTimeout(() => {
+            wx.switchTab({
+              url: '/pages/community/community'
+            });
+          }, 1000);
+        }
       }
     });
   },
 
   jAccountLogin() {
-    // TODO: jAccount OAuth2 对接（待授权）
     wx.showToast({
       title: 'jAccount登录开发中',
       icon: 'none'
@@ -130,24 +201,22 @@ Page({
 
   // 开发测试入口 - 跳过登录
   devLogin() {
-    // 模拟登录数据
     const mockUser = {
       id: 'dev001',
       nickname: '测试用户',
-      realName: '开发者',
+      name: '开发者',
       grade: '研二',
       major: '计算机科学',
       bio: '这是开发测试模式',
-      tags: ['前端', '创业', 'AI'],
+      techTags: ['前端', '创业', 'AI'],
+      interestTags: [],
       isProfileComplete: true
     };
     const mockToken = 'dev_token_' + Date.now();
 
-    // 保存到本地
     wx.setStorageSync('token', mockToken);
     wx.setStorageSync('userInfo', mockUser);
     
-    // 设置全局数据
     app.globalData.token = mockToken;
     app.globalData.userInfo = mockUser;
 
@@ -156,7 +225,6 @@ Page({
       icon: 'success'
     });
 
-    // 延迟跳转到首页
     setTimeout(() => {
       wx.switchTab({
         url: '/pages/community/community'

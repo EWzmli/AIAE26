@@ -9,8 +9,8 @@
         src="{{tempAvatar || userInfo.avatar}}" 
         mode="aspectFill"
       />
-      <view wx:else class="avatar-placeholder">
-        <text class="placeholder-text">{{userInfo.name ? userInfo.name[0] : '?'}}</text>
+      <view wx:else class="avatar-placeholder" style="background: {{userInfo.name ? '' : '#e94560'}};">
+        <text class="placeholder-text">{{nameInitials}}</text>
       </view>
       <view class="avatar-edit">
         <text class="edit-icon">📷</text>
