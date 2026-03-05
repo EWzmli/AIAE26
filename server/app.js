@@ -35,6 +35,7 @@ app.get('/', (req, res) => {
     name: 'AIAE API',
     version: '1.0.0',
     status: 'running',
+    env: process.env.NODE_ENV || 'development',
     endpoints: {
       auth: '/api/auth',
       user: '/api/user',
@@ -47,9 +48,13 @@ app.get('/', (req, res) => {
   });
 });
 
-// 健康检查
+// 健康检查（云托管用这个检测服务状态）
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
 // 404处理
@@ -66,7 +71,9 @@ app.use((err, req, res, next) => {
   });
 });
 
+// 云托管使用环境变量PORT，本地开发默认3000
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log('');
   console.log('╔════════════════════════════════════════╗');
@@ -75,6 +82,7 @@ app.listen(PORT, () => {
   console.log(`║  📡 Port:     ${PORT}`);
   console.log(`║  🌐 API:      http://localhost:${PORT}/api`);
   console.log(`║  ⚙️  Admin:    http://localhost:${PORT}/admin`);
+  console.log(`║  🔧 Env:       ${process.env.NODE_ENV || 'development'}`);
   console.log('╚════════════════════════════════════════╝');
   console.log('');
 });

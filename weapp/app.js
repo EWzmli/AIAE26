@@ -1,12 +1,12 @@
 // 小程序入口
-const API_BASE = 'http://localhost:3000/api';
+const { API_BASE } = require('./api.config');
 const { CONFIG, getFeatures } = require('./config');
 
 App({
   globalData: {
     userInfo: null,
     token: null,
-    API_BASE: API_BASE,
+    API_BASE: API_BASE,  // 从配置文件读取
     config: CONFIG,
     features: getFeatures()
   },
@@ -23,6 +23,10 @@ App({
     
     // 根据审核模式调整tabBar
     this.adjustTabBar();
+    
+    // 打印当前环境（调试用）
+    console.log('API_BASE:', API_BASE);
+    console.log('AUDIT_MODE:', CONFIG.AUDIT_MODE);
   },
   
   // 根据审核模式调整tabBar
@@ -31,13 +35,7 @@ App({
     
     if (CONFIG.AUDIT_MODE) {
       // 审核模式：只保留"社区"和"我的"，隐藏"社交"
-      wx.setTabBarItem({
-        index: 0,
-        text: '社区'
-      });
-      
-      // 隐藏社交tab（index 1）
-      wx.hideTabBarRedDot({ index: 1 });
+      console.log('审核模式：隐藏社交功能');
     }
   },
   
@@ -52,7 +50,7 @@ App({
     if (!token) return;
     
     wx.request({
-      url: `${API_BASE}/user/me`,
+      url: `${this.globalData.API_BASE}/user/me`,
       header: {
         'Authorization': `Bearer ${token}`
       },
@@ -85,7 +83,7 @@ App({
     }
     
     wx.request({
-      url: `${API_BASE}${url}`,
+      url: `${this.globalData.API_BASE}${url}`,
       method,
       data,
       header: {
