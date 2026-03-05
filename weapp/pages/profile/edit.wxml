@@ -1,46 +1,174 @@
+<!--pages/profile/edit.wxml-->
 <view class="container">
-  <view class="header">
-    <text class="title">编辑个人资料</text>
+  <!-- 头像区域 -->
+  <view class="avatar-section" bindtap="selectAvatar">
+    <view class="avatar-wrapper">
+      <image 
+        wx:if="{{userInfo.avatar || tempAvatar}}" 
+        class="avatar-image" 
+        src="{{tempAvatar || userInfo.avatar}}" 
+        mode="aspectFill"
+      />
+      <view wx:else class="avatar-placeholder">
+        <text class="placeholder-text">{{userInfo.name ? userInfo.name[0] : '?'}}</text>
+      </view>
+      <view class="avatar-edit">
+        <text class="edit-icon">📷</text>
+      </view>
+    </view>
+    <text class="avatar-tip">点击更换头像</text>
   </view>
-  
-  <view class="form">
-    <view class="form-item">
-      <text class="label">昵称</text>
-      <input type="text" placeholder="请输入昵称" value="{{userInfo.nickname}}" bindinput="onNicknameInput"/>
+
+  <!-- 表单区域 -->
+  <view class="form-section">
+    <!-- 基本信息 -->
+    <view class="form-group">
+      <view class="group-title">基本信息</view>
+      
+      <view class="form-item">
+        <text class="label required">昵称</text>
+        <input 
+          type="text" 
+          placeholder="请输入昵称" 
+          value="{{userInfo.nickname}}" 
+          bindinput="onNicknameInput"
+        />
+      </view>
+      
+      <view class="form-item">
+        <text class="label required">真实姓名</text>
+        <input 
+          type="text" 
+          placeholder="请输入真实姓名" 
+          value="{{userInfo.name}}" 
+          bindinput="onNameInput"
+        />
+      </view>
+      
+      <view class="form-item">
+        <text class="label required">年级</text>
+        <picker bindchange="onGradeChange" value="{{gradeIndex}}" range="{{grades}}">
+          <view class="picker {{userInfo.grade ? '' : 'placeholder'}}">
+            {{userInfo.grade || '请选择年级'}}
+          </view>
+        </picker>
+      </view>
+      
+      <view class="form-item">
+        <text class="label required">专业</text>
+        <input 
+          type="text" 
+          placeholder="请输入专业" 
+          value="{{userInfo.major}}" 
+          bindinput="onMajorInput"
+        />
+      </view>
     </view>
-    
-    <view class="form-item">
-      <text class="label">真实姓名</text>
-      <input type="text" placeholder="请输入真实姓名" value="{{userInfo.realName}}" bindinput="onRealNameInput"/>
+
+    <!-- 联系方式 -->
+    <view class="form-group">
+      <view class="group-title">联系方式</view>
+      
+      <view class="form-item">
+        <text class="label required">微信号</text>
+        <input 
+          type="text" 
+          placeholder="用于名片展示" 
+          value="{{userInfo.wechatId}}" 
+          bindinput="onWechatInput"
+        />
+      </view>
     </view>
-    
-    <view class="form-item">
-      <text class="label">年级</text>
-      <picker bindchange="onGradeChange" value="{{gradeIndex}}" range="{{grades}}">
-        <view class="picker">{{grades[gradeIndex] || '请选择年级'}}</view>
-      </picker>
-    </view>
-    
-    <view class="form-item">
-      <text class="label">专业</text>
-      <input type="text" placeholder="请输入专业" value="{{userInfo.major}}" bindinput="onMajorInput"/>
-    </view>
-    
-    <view class="form-item">
-      <text class="label">个人简介</text>
-      <textarea placeholder="介绍你自己..." value="{{userInfo.bio}}" bindinput="onBioInput"/>
-    </view>
-    
-    <view class="form-item">
-      <text class="label">技能标签</text>
-      <view class="tags">
-        <view wx:for="{{userInfo.tags}}" wx:key="*this" class="tag">
-          {{item}}
+
+    <!-- 创业信息 -->
+    <view class="form-group">
+      <view class="group-title">创业信息</view>
+      
+      <view class="form-item">
+        <text class="label required">当前状态</text>
+        <view class="status-tags">
+          <view 
+            wx:for="{{statusTags}}" 
+            wx:key="*this"
+            class="status-tag {{userInfo.statusTag === item ? 'active' : ''}}"
+            bindtap="selectStatusTag"
+            data-tag="{{item}}"
+          >
+            {{item}}
+          </view>
         </view>
-        <view class="tag add" bindtap="addTag">+</view>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">项目/公司名</text>
+        <input 
+          type="text" 
+          placeholder="如果有创业项目请填写" 
+          value="{{userInfo.projectName}}" 
+          bindinput="onProjectInput"
+        />
+      </view>
+    </view>
+
+    <!-- 个人简介 -->
+    <view class="form-group">
+      <view class="group-title">个人简介</view>
+      
+      <view class="form-item textarea-item">
+        <textarea 
+          placeholder="介绍你自己，让更多人了解你..." 
+          value="{{userInfo.bio}}" 
+          bindinput="onBioInput"
+          maxlength="200"
+        />
+        <text class="textarea-count">{{(userInfo.bio || '').length}}/200</text>
+      </view>
+    </view>
+
+    <!-- 技能标签 -->
+    <view class="form-group">
+      <view class="group-header">
+        <text class="group-title">技能标签</text>
+        <text class="add-btn" bindtap="addTechTag">+ 添加</text>
+      </view>
+      
+      <view class="tags-list">
+        <view 
+          wx:for="{{userInfo.techTags || []}}" 
+          wx:key="*this"
+          class="tag tech-tag"
+        >
+          <text>{{item}}</text>
+          <text class="tag-remove" bindtap="removeTechTag" data-index="{{index}}">×</text>
+        </view>
+        <text wx:if="{{!(userInfo.techTags && userInfo.techTags.length)}}" class="empty-tip">添加技能标签，方便他人找到你</text>
+      </view>
+    </view>
+
+    <!-- 兴趣标签 -->
+    <view class="form-group">
+      <view class="group-header">
+        <text class="group-title">兴趣标签</text>
+        <text class="add-btn" bindtap="addInterestTag">+ 添加</text>
+      </view>
+      
+      <view class="tags-list">
+        <view 
+          wx:for="{{userInfo.interestTags || []}}" 
+          wx:key="*this"
+          class="tag interest-tag"
+        >
+          <text>{{item}}</text>
+          <text class="tag-remove" bindtap="removeInterestTag" data-index="{{index}}">×</text>
+        </view>
+        <text wx:if="{{!(userInfo.interestTags && userInfo.interestTags.length)}}" class="empty-tip">添加兴趣标签，找到志同道合的伙伴</text>
       </view>
     </view>
   </view>
-  
-  <button class="save-btn" bindtap="saveProfile">保存</button>
+
+  <!-- 底部按钮 -->
+  <view class="footer-actions">
+    <button class="btn-cancel" bindtap="cancel">取消</button>
+    <button class="btn-save" bindtap="saveProfile">保存</button>
+  </view>
 </view>

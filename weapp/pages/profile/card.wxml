@@ -1,48 +1,116 @@
-<!-- 名片页面 -->
+<!--pages/profile/card.wxml-->
 <view class="container">
-  <view class="card-preview">
-    <!-- 名片内容 -->
-    <view class="business-card">
-      <view class="card-header">
-        <text class="card-logo">AIAE</text>
-        <text class="card-subtitle">上海交通大学创业者社区</text>
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">我的名片</text>
+    <text class="page-subtitle">生成专属名片，用于线下交流</text>
+  </view>
+
+  <!-- 名片预览区域 -->
+  <view class="card-preview-section">
+    <view class="card-wrapper" bindtap="previewCard">
+      <!-- 生成的名片图片 -->
+      <image 
+        wx:if="{{cardImage && !isGenerating}}" 
+        class="card-image" 
+        src="{{cardImage}}" 
+        mode="widthFix"
+      />
+      
+      <!-- 加载中 -->
+      <view wx:elif="{{isGenerating}}" class="card-loading">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">正在生成名片...</text>
       </view>
       
-      <view class="card-body">
-        <view class="user-avatar-large">
-          <text>{{userInfo.name ? userInfo.name[0] : '?'}}</text>
-        </view>
-        
-        <view class="user-info">
-          <text class="user-name">{{userInfo.name || '未命名'}}</text>
-          <text class="user-grade-major">{{userInfo.grade || ''}} · {{userInfo.major || ''}}</text>
-          
-          <view class="status-badge" wx:if="{{userInfo.statusTag}}">
-            {{userInfo.statusTag}}
-          </view>
-          
-          <text class="user-bio">{{userInfo.bio || '暂无简介'}}</text>
-        </view>
-      </view>
-      
-      <view class="card-footer">
-        <view class="tags-row" wx:if="{{userInfo.techTags && userInfo.techTags.length > 0}}">
-          <text class="mini-tag" wx:for="{{userInfo.techTags.slice(0,3)}}" wx:key="*this">{{item}}</text>
-        </view>
-        <text class="card-tip">扫码添加我为好友</text>
+      <!-- 占位 -->
+      <view wx:else class="card-placeholder">
+        <text class="placeholder-icon">🎨</text>
+        <text class="placeholder-text">点击生成名片</text>
       </view>
     </view>
     
-    <!-- 画布（用于生成图片） -->
-    <canvas canvas-id="cardCanvas" style="width: 375px; height: 600px; position: fixed; left: -9999px;"></canvas>
+    <!-- 提示文字 -->
+    <view class="card-hint" wx:if="{{cardImage}}">
+      <text class="hint-text">点击名片可预览大图</text>
+    </view>
   </view>
-  
-  <view class="action-buttons">
-    <button class="btn btn-primary" bindtap="saveCard">保存到相册</button>
-    <button class="btn btn-outline" open-type="share">分享给好友</button>
+
+  <!-- 名片规格说明 -->
+  <view class="spec-section" wx:if="{{showActions}}">
+    <view class="spec-title">📐 打印规格</view>
+    <view class="spec-list">
+      <view class="spec-item">
+        <text class="spec-label">标准尺寸</text>
+        <text class="spec-value">90mm × 54mm</text>
+      </view>
+      <view class="spec-item">
+        <text class="spec-label">推荐纸张</text>
+        <text class="spec-value">300g铜版纸 / 特种纸</text>
+      </view>
+      <view class="spec-item">
+        <text class="spec-label">可选工艺</text>
+        <text class="spec-value">覆哑膜 / UV / 烫金</text>
+      </view>
+    </view>
   </view>
-  
-  <view class="tips">
-    <text>名片可用于线下活动交换，对方扫码可查看你的详细资料</text>
+
+  <!-- 操作按钮 -->
+  <view class="action-section" wx:if="{{showActions}}">
+    <view class="action-title">名片操作</view>
+    
+    <view class="action-grid">
+      <view class="action-item" bindtap="saveCard">
+        <view class="action-icon save">💾</view>
+        <text class="action-text">保存相册</text>
+      </view>
+      
+      <view class="action-item" bindtap="printCard">
+        <view class="action-icon print">🖨️</view>
+        <text class="action-text">打印名片</text>
+      </view>
+      
+      <view class="action-item" bindtap="generateCard">
+        <view class="action-icon refresh">🔄</view>
+        <text class="action-text">重新生成</text>
+      </view>
+      
+      <button class="action-item share-btn" open-type="share">
+        <view class="action-icon share">📤</view>
+        <text class="action-text">分享给好友</text>
+      </button>
+    </view>
   </view>
+
+  <!-- 打印指引 -->
+  <view class="guide-section" wx:if="{{showActions}}">
+    <view class="guide-title">📝 打印指引</view>
+    <view class="guide-steps">
+      <view class="step">
+        <view class="step-num">1</view>
+        <text class="step-text">点击"打印名片"保存高清图片</text>
+      </view>
+      <view class="step">
+        <view class="step-num">2</view>
+        <text class="step-text">前往打印店或使用手机打印机</text>
+      </view>
+      <view class="step">
+        <view class="step-num">3</view>
+        <text class="step-text">告知店员名片尺寸：90mm × 54mm</text>
+      </view>
+      <view class="step">
+        <view class="step-num">4</view>
+        <text class="step-text">选择300g以上纸张，建议覆哑膜</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提示信息 -->
+  <view class="tips-section">
+    <text class="tips-icon">💡</text>
+    <text class="tips-text">名片信息来自个人资料，编辑资料可更新名片内容</text>
+  </view>
+
+  <!-- 隐藏的画布 -->
+  <canvas type="2d" id="cardCanvas" style="position: fixed; left: -9999px; top: -9999px;"></canvas>
 </view>
