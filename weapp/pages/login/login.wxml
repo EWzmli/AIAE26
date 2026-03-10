@@ -1,16 +1,29 @@
 <!-- 登录页 - 云开发版本 -->
 <view class="container">
+  <!-- 顶部装饰 -->
+  <view class="top-decoration">
+    <view class="circle circle-1"></view>
+    <view class="circle circle-2"></view>
+    <view class="circle circle-3"></view>
+  </view>
+
   <view class="header">
     <view class="back-btn" bindtap="goBack">←</view>
-    <text class="page-title">登录</text>
   </view>
 
   <view class="login-section">
+    <!-- Logo区域 -->
     <view class="logo-section">
-      <text class="logo-icon">🎓</text>
+      <view class="logo-circle">
+        <text class="logo-icon">🎓</text>
+      </view>
       <text class="logo-text">AIAE</text>
       <text class="logo-subtitle">上海交通大学创业者社区</text>
+      <text class="logo-desc">连接志同道合的创业伙伴</text>
     </view>
+
+    <!-- 中间留白，把按钮往下推 -->
+    <view class="spacer"></view>
 
     <!-- 微信一键登录 -->
     <view class="wx-login-section">
@@ -19,32 +32,44 @@
         bindtap="wxLogin"
         disabled="{{isLoading}}"
       >
+        <text class="btn-icon" wx:if="{{!isLoading}}">💬</text>
         <text wx:if="{{!isLoading}}">微信一键登录</text>
         <text wx:else>登录中...</text>
       </button>
       
       <view class="tips-text">
-        <text>点击登录即表示您同意相关用户协议</text>
+        <text>点击登录即表示您同意</text>
+        <text class="link">《用户协议》</text>
+        <text>和</text>
+        <text class="link">《隐私政策》</text>
       </view>
     </view>
 
-    <view class="divider">
-      <text>更多登录方式</text>
-    </view>
+    <!-- 更多登录方式 -->
+    <view class="other-login-section">
+      <view class="divider">
+        <view class="line"></view>
+        <text class="divider-text">其他登录方式</text>
+        <view class="line"></view>
+      </view>
 
-    <button class="btn btn-outline" bindtap="jAccountLogin">
-      使用 jAccount 登录
-    </button>
+      <button class="btn btn-outline" bindtap="jAccountLogin">
+        <text class="btn-icon">🔷</text>
+        <text>jAccount 登录</text>
+      </button>
 
-    <view class="tips">
-      <text>• jAccount登录即将上线</text>
-      <text>• 仅限上海交通大学校内用户使用</text>
+      <view class="tips">
+        <text>• 仅限上海交通大学校内用户使用</text>
+        <text>• 首次登录需完善个人资料</text>
+      </view>
     </view>
 
     <!-- 开发测试入口 -->
     <view class="dev-section" wx:if="{{isDevMode}}">
       <view class="dev-divider">
+        <view class="line"></view>
         <text>开发测试</text>
+        <view class="line"></view>
       </view>
       <button class="btn btn-dev" bindtap="devLogin">
         跳过登录（开发模式）
