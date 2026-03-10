@@ -1,4 +1,4 @@
-<!-- 登录页 -->
+<!-- 登录页 - 云开发版本 -->
 <view class="container">
   <view class="header">
     <view class="back-btn" bindtap="goBack">←</view>
@@ -12,48 +12,24 @@
       <text class="logo-subtitle">上海交通大学创业者社区</text>
     </view>
 
-    <view class="input-group">
-      <text class="label">交大邮箱</text>
-      <input 
-        class="input email-full" 
-        type="text" 
-        placeholder="请输入交大邮箱，如 xxx@sjtu.edu.cn"
-        value="{{email}}"
-        bindinput="onEmailInput"
-      />
-    </view>
-
-    <view class="input-group" wx:if="{{showCodeInput}}">
-      <text class="label">验证码</text>
-      <view class="code-input">
-        <input 
-          class="input" 
-          type="number" 
-          placeholder="请输入6位验证码"
-          maxlength="6"
-          value="{{verifyCode}}"
-          bindinput="onCodeInput"
-        />
-        <button 
-          class="btn-send {{countdown > 0 ? 'disabled' : ''}}" 
-          bindtap="sendCode"
-          disabled="{{countdown > 0 || !isValidEmail}}"
-        >
-          {{countdown > 0 ? countdown + 's' : '重新发送'}}
-        </button>
+    <!-- 微信一键登录 -->
+    <view class="wx-login-section">
+      <button 
+        class="btn btn-primary wx-login-btn" 
+        bindtap="wxLogin"
+        disabled="{{isLoading}}"
+      >
+        <text wx:if="{{!isLoading}}">微信一键登录</text>
+        <text wx:else>登录中...</text>
+      </button>
+      
+      <view class="tips-text">
+        <text>点击登录即表示您同意相关用户协议</text>
       </view>
     </view>
 
-    <button 
-      class="btn btn-primary {{!canSubmit ? 'btn-disabled' : ''}}" 
-      bindtap="submit"
-      disabled="{{!canSubmit}}"
-    >
-      {{showCodeInput ? '登录' : '获取验证码'}}
-    </button>
-
     <view class="divider">
-      <text>或</text>
+      <text>更多登录方式</text>
     </view>
 
     <button class="btn btn-outline" bindtap="jAccountLogin">
@@ -61,8 +37,8 @@
     </button>
 
     <view class="tips">
+      <text>• jAccount登录即将上线</text>
       <text>• 仅限上海交通大学校内用户使用</text>
-      <text>• 请使用 @sjtu.edu.cn 邮箱</text>
     </view>
 
     <!-- 开发测试入口 -->
