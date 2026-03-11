@@ -23,7 +23,7 @@ App({
     }
     
     wx.cloud.init({
-      env: 'cloudbase-6g3e4gx180dae419', // TODO: 替换为你的云开发环境ID
+      env: 'YOUR_CLOUD_ENV_ID', // TODO: 替换为你的云开发环境ID
       traceUser: true
     });
     
