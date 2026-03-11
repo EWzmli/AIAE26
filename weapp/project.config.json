@@ -45,5 +45,6 @@
   "libVersion": "2.30.0",
   "appid": "wxe635e30ebf45f6d4",
   "projectname": "AIAE",
+  "cloudfunctionRoot": "cloudfunctions/",
   "condition": {}
 }
